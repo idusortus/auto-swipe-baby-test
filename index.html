@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Baby Name Swiper</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👶 Baby Name Swiper</h1>
+            <p class="subtitle">Swipe right to like, left to pass</p>
+        </header>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Whatever</button>
+            <button class="filter-btn" data-filter="boy">Boy</button>
+            <button class="filter-btn" data-filter="girl">Girl</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-value" id="likedCount">0</span>
+                <span class="stat-label">Liked</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="remainingCount">0</span>
+                <span class="stat-label">Remaining</span>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div class="swipe-indicator left">
+                <span>❌ PASS</span>
+            </div>
+            <div class="swipe-indicator right">
+                <span>❤️ LIKE</span>
+            </div>
+            <div id="cardStack"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn pass" id="passBtn">
+                <span>❌</span>
+            </button>
+            <button class="action-btn like" id="likeBtn">
+                <span>❤️</span>
+            </button>
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <h2>🎉 All done!</h2>
+            <p>You've gone through all the names.</p>
+            <button class="reset-btn" id="resetBtn">Start Over</button>
+        </div>
+    </div>
+
+    <script src="names-data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
