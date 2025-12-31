@@ -47,6 +47,50 @@ Names are randomly shuffled each time you filter or reset.
 - Responsive design with mobile-first approach
 - No backend, database, or authentication (Proof of Concept)
 
+## Deployment to Azure
+
+This project is configured for deployment to **Azure Static Web Apps**. 
+
+### Prerequisites
+1. An Azure account (create one at [azure.microsoft.com](https://azure.microsoft.com))
+2. A GitHub repository with this code
+
+### Setup Steps
+
+1. **Create an Azure Static Web App**:
+   - Go to the [Azure Portal](https://portal.azure.com)
+   - Click "Create a resource" → Search for "Static Web App"
+   - Click "Create"
+   - Fill in the details:
+     - Resource group: Create new or use existing
+     - Name: Choose a name for your app
+     - Region: Choose closest to your users
+     - Source: Select "GitHub"
+     - Sign in to GitHub and authorize Azure
+     - Select your organization, repository, and branch (usually `main`)
+     - Build presets: Select "Custom"
+     - App location: `/`
+     - API location: (leave empty)
+     - Output location: (leave empty)
+   - Click "Review + create" → "Create"
+
+2. **Configure the API Token**:
+   - After deployment, Azure will automatically add the `AZURE_STATIC_WEB_APPS_API_TOKEN` secret to your GitHub repository
+   - The GitHub Actions workflow (`.github/workflows/azure-static-web-apps-deploy.yml`) will use this token automatically
+
+3. **Automatic Deployment**:
+   - Every push to the `main` branch will trigger an automatic deployment
+   - Pull requests will create preview deployments
+   - You can view deployment status in the "Actions" tab of your GitHub repository
+
+4. **Access Your Site**:
+   - After deployment, your site will be available at: `https://<your-app-name>.azurestaticapps.net`
+   - You can also configure a custom domain in the Azure Portal
+
+### Configuration Files
+- `.github/workflows/azure-static-web-apps-deploy.yml` - GitHub Actions workflow for CI/CD
+- `staticwebapp.config.json` - Azure Static Web Apps configuration (routing, headers, etc.)
+
 ## Browser Compatibility
 
 Works in all modern browsers that support:
