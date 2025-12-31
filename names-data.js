@@ -1,4 +1,4 @@
-// Baby names database with 100+ names
+// Baby names database with 110 names (50 boys, 60 girls)
 const babyNames = [
     // Boy names (50)
     { name: "Liam", gender: "boy" },
