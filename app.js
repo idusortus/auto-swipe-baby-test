@@ -246,8 +246,6 @@ class BabyNameSwiper {
         this.isReviewing = true;
         this.currentNames = [...this.likedNames];
         this.currentIndex = 0;
-        // Clear liked names when starting review to prevent duplicates and count accumulation
-        this.likedNames = [];
         this.showSwipe();
     }
     
