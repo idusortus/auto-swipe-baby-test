@@ -36,7 +36,7 @@ You'll be prompted to paste the secret value.
 
 1. Go to [Azure Portal](https://portal.azure.com)
 2. Navigate to your Static Web App resource
-3. Go to **Overview** → **Manage deployment token** → **Reset**
+3. Go to **Overview** → **Reset deployment token**
 4. Copy the new token and use it instead of the exposed one
 
 ## After Adding the Secret

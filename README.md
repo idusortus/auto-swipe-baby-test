@@ -105,7 +105,7 @@ If you're experiencing deployment failures, verify that the Azure deployment tok
    - In repository **Settings** → **Secrets and variables** → **Actions**
    - Click **New repository secret**
    - Name: `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`
-   - Value: Get this from Azure Portal → Your Static Web App → **Manage deployment token**
+   - Value: Get this from Azure Portal → Your Static Web App → **Overview** → Look for the deployment token
    - Click **Add secret**
 
 3. **Security Best Practice:**
