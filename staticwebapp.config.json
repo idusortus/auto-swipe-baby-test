@@ -10,6 +10,7 @@
   "globalHeaders": {
     "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;",
     "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY"
+    "X-Frame-Options": "DENY",
+    "Cache-Control": "public, max-age=300, must-revalidate"
   }
 }

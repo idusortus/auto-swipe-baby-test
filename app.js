@@ -159,6 +159,11 @@ class BabyNameSwiper {
         root.style.setProperty('--girl-bg-color', this.currentTheme.colors.girlBg);
         root.style.setProperty('--girl-text-color', this.currentTheme.colors.girlText);
         
+        // Force browser to recalculate gradient by setting it directly
+        // This fixes cache busting issues where CSS variable changes don't update gradients
+        // Gradient definition matches styles.css body background (135deg, 0%, 100%)
+        document.body.style.background = `linear-gradient(135deg, ${this.currentTheme.colors.primary} 0%, ${this.currentTheme.colors.secondary} 100%)`;
+        
         // Update meta theme color
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
