@@ -1,7 +1,7 @@
 // Baby Name Swiper Application
 class BabyNameSwiper {
     constructor() {
-        this.allNames = [...babyNames];
+        this.allNames = [];
         this.currentFilter = 'all';
         this.currentTheme = null;
         this.likedNames = [];
