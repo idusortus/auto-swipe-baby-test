@@ -89,11 +89,11 @@ This project is configured for deployment to **Azure Static Web Apps**.
    - You can also configure a custom domain in the Azure Portal
 
 ### Configuration Files
-- `.github/workflows/azure-static-web-apps-agreeable-field-0ababe210.yml` - Primary workflow for the specific Azure Static Web App instance
-- `.github/workflows/azure-static-web-apps-deploy.yml` - Generic workflow template (uses different secret name)
+- `.github/workflows/azure-static-web-apps-agreeable-field-0ababe210.yml` - Deployment workflow for the specific Azure Static Web App instance
+- `.github/workflows/azure-static-web-apps-deploy.yml` - Alternative workflow using standard secret name (AZURE_STATIC_WEB_APPS_API_TOKEN)
 - `staticwebapp.config.json` - Azure Static Web Apps configuration (routing, headers, etc.)
 
-**Note:** The primary workflow uses the secret `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`, which matches your specific Azure Static Web App deployment.
+**Note:** The instance-specific workflow uses the secret `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`, which corresponds to your Azure Static Web App deployment.
 
 ### Troubleshooting Deployment Issues
 
@@ -107,7 +107,7 @@ If you're experiencing deployment failures, verify that the Azure deployment tok
    - In repository **Settings** → **Secrets and variables** → **Actions**
    - Click **New repository secret**
    - Name: `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`
-   - Value: Get this from Azure Portal → Your Static Web App → **Overview** → Click **Manage deployment token** or copy from the deployment token section
+   - Value: Copy the deployment token from Azure Portal → Your Static Web App → **Overview** page
    - Click **Add secret**
 
 3. **Security Best Practice:**

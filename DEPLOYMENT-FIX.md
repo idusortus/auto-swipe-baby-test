@@ -25,7 +25,7 @@ GitHub secrets cannot be added programmatically through the GitHub API without s
 
 ```bash
 gh secret set AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210 \
-  --repo idusortus/auto-swipe-baby-test
+  --repo OWNER/REPOSITORY
 ```
 
 You'll be prompted to paste the secret value.
