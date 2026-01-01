@@ -221,7 +221,7 @@ const themes = {
             { name: "Pearl", gender: "girl" },
             { name: "Rain", gender: "girl" },
             { name: "Meadow", gender: "girl" },
-            { name: "Sage", gender: "girl" },
+            { name: "Briar", gender: "girl" },
             { name: "Luna", gender: "girl" },
             { name: "Aurora", gender: "girl" },
             { name: "Celeste", gender: "girl" }

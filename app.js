@@ -124,9 +124,13 @@ class BabyNameSwiper {
             themeOption.className = 'theme-option';
             themeOption.dataset.themeId = theme.id;
             
+            const nameParts = theme.name.split(' ');
+            const icon = nameParts[0];
+            const displayName = nameParts.slice(1).join(' ');
+            
             themeOption.innerHTML = `
-                <div class="theme-icon">${theme.name.split(' ')[0]}</div>
-                <div class="theme-name">${theme.name.split(' ').slice(1).join(' ')}</div>
+                <div class="theme-icon">${icon}</div>
+                <div class="theme-name">${displayName}</div>
                 <div class="theme-desc">${theme.description}</div>
             `;
             
@@ -156,7 +160,10 @@ class BabyNameSwiper {
         root.style.setProperty('--girl-text-color', this.currentTheme.colors.girlText);
         
         // Update meta theme color
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', this.currentTheme.colors.primary);
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', this.currentTheme.colors.primary);
+        }
     }
     
     showWelcome() {
@@ -190,12 +197,14 @@ class BabyNameSwiper {
         // Update swipe indicators
         const leftIndicator = document.querySelector('.swipe-indicator.left span');
         const rightIndicator = document.querySelector('.swipe-indicator.right span');
-        leftIndicator.textContent = `${this.currentTheme.icons.pass} PASS`;
-        rightIndicator.textContent = `${this.currentTheme.icons.like} LIKE`;
+        if (leftIndicator) leftIndicator.textContent = `${this.currentTheme.icons.pass} PASS`;
+        if (rightIndicator) rightIndicator.textContent = `${this.currentTheme.icons.like} LIKE`;
         
         // Update action buttons
-        document.querySelector('#passBtn span').textContent = this.currentTheme.icons.pass;
-        document.querySelector('#likeBtn span').textContent = this.currentTheme.icons.like;
+        const passBtn = document.querySelector('#passBtn span');
+        const likeBtn = document.querySelector('#likeBtn span');
+        if (passBtn) passBtn.textContent = this.currentTheme.icons.pass;
+        if (likeBtn) likeBtn.textContent = this.currentTheme.icons.like;
     }
     
     showResults() {
