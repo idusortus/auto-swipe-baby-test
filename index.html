@@ -27,7 +27,18 @@
             </div>
         </div>
 
-        <!-- View 1.2: Welcome Screen -->
+        <!-- View 1.2: Theme Selection -->
+        <div id="themeView" class="view" style="display: none;">
+            <div class="theme-content">
+                <h1>🎨 Choose Your Vibe</h1>
+                <p class="theme-text">Select a theme to personalize your experience</p>
+                <div class="theme-grid" id="themeGrid">
+                    <!-- Theme options will be dynamically generated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- View 1.3: Welcome Screen -->
         <div id="welcomeView" class="view" style="display: none;">
             <div class="welcome-content">
                 <h1>👶 Welcome!</h1>
@@ -103,6 +114,7 @@
     </div>
 
     <script src="names-data.js"></script>
+    <script src="themes-data.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

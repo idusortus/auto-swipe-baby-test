@@ -6,13 +6,20 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--secondary-color, #764ba2) 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
     overflow: hidden;
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --card-name-color: #667eea;
+    --boy-bg-color: #e3f2fd;
+    --boy-text-color: #1976d2;
+    --girl-bg-color: #fce4ec;
+    --girl-text-color: #c2185b;
 }
 
 .container {
@@ -54,6 +61,70 @@ body {
 }
 
 /* Welcome Screen Styles */
+.theme-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.theme-content h1 {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 20px;
+}
+
+.theme-text {
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.theme-option {
+    padding: 25px 15px;
+    border: 3px solid #667eea;
+    background: white;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.theme-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.theme-option.selected {
+    background: #667eea;
+    color: white;
+}
+
+.theme-option .theme-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.theme-option .theme-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.theme-option .theme-desc {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
 .welcome-content {
     background: white;
     border-radius: 20px;
@@ -64,7 +135,7 @@ body {
 
 .welcome-content h1 {
     font-size: 2.5rem;
-    color: #667eea;
+    color: var(--primary-color, #667eea);
     margin-bottom: 20px;
 }
 
@@ -91,16 +162,16 @@ body {
     padding: 20px;
     font-size: 1.3rem;
     font-weight: 600;
-    border: 3px solid #667eea;
+    border: 3px solid var(--primary-color, #667eea);
     background: white;
-    color: #667eea;
+    color: var(--primary-color, #667eea);
     border-radius: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .choice-btn:hover {
-    background: #667eea;
+    background: var(--primary-color, #667eea);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
@@ -129,7 +200,7 @@ body {
     font-size: 1.2rem;
     font-weight: 600;
     background: rgba(255, 255, 255, 0.95);
-    color: #667eea;
+    color: var(--primary-color, #667eea);
     border: none;
     border-radius: 15px;
     cursor: pointer;
@@ -155,7 +226,7 @@ body {
 
 .results-content h1 {
     font-size: 2.5rem;
-    color: #667eea;
+    color: var(--primary-color, #667eea);
     margin-bottom: 30px;
     text-align: center;
 }
@@ -183,7 +254,7 @@ body {
     border-radius: 10px;
     font-size: 1.2rem;
     color: #333;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid var(--primary-color, #667eea);
 }
 
 .results-actions {
@@ -203,7 +274,7 @@ body {
 }
 
 .result-btn.review {
-    background: #667eea;
+    background: var(--primary-color, #667eea);
     color: white;
 }
 
@@ -330,7 +401,7 @@ body {
 .card .name {
     font-size: 3rem;
     font-weight: bold;
-    color: #667eea;
+    color: var(--card-name-color, #667eea);
     margin-bottom: 20px;
 }
 
@@ -344,13 +415,13 @@ body {
 }
 
 .card .gender.boy {
-    background: #e3f2fd;
-    color: #1976d2;
+    background: var(--boy-bg-color, #e3f2fd);
+    color: var(--boy-text-color, #1976d2);
 }
 
 .card .gender.girl {
-    background: #fce4ec;
-    color: #c2185b;
+    background: var(--girl-bg-color, #fce4ec);
+    color: var(--girl-text-color, #c2185b);
 }
 
 .action-buttons {
@@ -406,7 +477,7 @@ body {
 
 .empty-state h2 {
     font-size: 2.5rem;
-    color: #667eea;
+    color: var(--primary-color, #667eea);
     margin-bottom: 20px;
 }
 
@@ -420,7 +491,7 @@ body {
     padding: 15px 40px;
     font-size: 1.1rem;
     font-weight: 600;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--primary-color, #667eea), var(--secondary-color, #764ba2));
     color: white;
     border: none;
     border-radius: 25px;

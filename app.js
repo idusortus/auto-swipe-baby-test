@@ -1,8 +1,9 @@
 // Baby Name Swiper Application
 class BabyNameSwiper {
     constructor() {
-        this.allNames = [...babyNames];
+        this.allNames = [];
         this.currentFilter = 'all';
+        this.currentTheme = null;
         this.likedNames = [];
         this.currentNames = [];
         this.currentIndex = 0;
@@ -35,6 +36,8 @@ class BabyNameSwiper {
         // Splash screen double-tap
         const splashView = document.getElementById('splashView');
         splashView.addEventListener('click', () => this.handleSplashTap());
+        
+        // Theme selection will be set up when rendering themes
         
         // Welcome screen choice buttons
         document.querySelectorAll('.choice-btn').forEach(btn => {
@@ -85,7 +88,7 @@ class BabyNameSwiper {
         // Auto-advance after 5 seconds
         setTimeout(() => {
             if (this.currentView === 'splash') {
-                this.showWelcome();
+                this.showThemeSelection();
             }
         }, 5000);
     }
@@ -94,7 +97,7 @@ class BabyNameSwiper {
         this.splashTapCount++;
         
         if (this.splashTapCount === 2) {
-            this.showWelcome();
+            this.showThemeSelection();
             return;
         }
         
@@ -105,10 +108,69 @@ class BabyNameSwiper {
         }, 500);
     }
     
+    showThemeSelection() {
+        this.currentView = 'theme';
+        this.hideAllViews();
+        document.getElementById('themeView').style.display = 'block';
+        this.renderThemes();
+    }
+    
+    renderThemes() {
+        const themeGrid = document.getElementById('themeGrid');
+        themeGrid.innerHTML = '';
+        
+        Object.values(themes).forEach(theme => {
+            const themeOption = document.createElement('div');
+            themeOption.className = 'theme-option';
+            themeOption.dataset.themeId = theme.id;
+            
+            const nameParts = theme.name.split(' ');
+            const icon = nameParts[0];
+            const displayName = nameParts.slice(1).join(' ');
+            
+            themeOption.innerHTML = `
+                <div class="theme-icon">${icon}</div>
+                <div class="theme-name">${displayName}</div>
+                <div class="theme-desc">${theme.description}</div>
+            `;
+            
+            themeOption.addEventListener('click', () => {
+                this.selectTheme(theme.id);
+            });
+            
+            themeGrid.appendChild(themeOption);
+        });
+    }
+    
+    selectTheme(themeId) {
+        this.currentTheme = themes[themeId];
+        this.allNames = [...this.currentTheme.names];
+        this.applyTheme();
+        this.showWelcome();
+    }
+    
+    applyTheme() {
+        const root = document.documentElement;
+        root.style.setProperty('--primary-color', this.currentTheme.colors.primary);
+        root.style.setProperty('--secondary-color', this.currentTheme.colors.secondary);
+        root.style.setProperty('--card-name-color', this.currentTheme.colors.cardName);
+        root.style.setProperty('--boy-bg-color', this.currentTheme.colors.boyBg);
+        root.style.setProperty('--boy-text-color', this.currentTheme.colors.boyText);
+        root.style.setProperty('--girl-bg-color', this.currentTheme.colors.girlBg);
+        root.style.setProperty('--girl-text-color', this.currentTheme.colors.girlText);
+        
+        // Update meta theme color
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', this.currentTheme.colors.primary);
+        }
+    }
+    
     showWelcome() {
         this.currentView = 'welcome';
         this.hideAllViews();
         document.getElementById('welcomeView').style.display = 'block';
+        this.updateGenderIcons();
     }
     
     startSwipe() {
@@ -123,9 +185,26 @@ class BabyNameSwiper {
         this.currentView = 'swipe';
         this.hideAllViews();
         document.getElementById('swipeView').style.display = 'block';
+        this.updateSwipeIcons();
         this.renderCards();
         this.updateStats();
         this.hideEmptyState();
+    }
+    
+    updateSwipeIcons() {
+        if (!this.currentTheme) return;
+        
+        // Update swipe indicators
+        const leftIndicator = document.querySelector('.swipe-indicator.left span');
+        const rightIndicator = document.querySelector('.swipe-indicator.right span');
+        if (leftIndicator) leftIndicator.textContent = `${this.currentTheme.icons.pass} PASS`;
+        if (rightIndicator) rightIndicator.textContent = `${this.currentTheme.icons.like} LIKE`;
+        
+        // Update action buttons
+        const passBtn = document.querySelector('#passBtn span');
+        const likeBtn = document.querySelector('#likeBtn span');
+        if (passBtn) passBtn.textContent = this.currentTheme.icons.pass;
+        if (likeBtn) likeBtn.textContent = this.currentTheme.icons.like;
     }
     
     showResults() {
@@ -235,9 +314,12 @@ class BabyNameSwiper {
         const card = document.createElement('div');
         card.className = 'card' + (isTopCard ? ' top-card' : '');
         
+        const boyIcon = this.currentTheme ? this.currentTheme.icons.boy : '👦';
+        const girlIcon = this.currentTheme ? this.currentTheme.icons.girl : '👧';
+        
         card.innerHTML = `
             <div class="name">${nameData.name}</div>
-            <div class="gender ${nameData.gender}">${nameData.gender === 'boy' ? '👦 Boy' : '👧 Girl'}</div>
+            <div class="gender ${nameData.gender}">${nameData.gender === 'boy' ? `${boyIcon} Boy` : `${girlIcon} Girl`}</div>
         `;
         
         if (isTopCard) {
@@ -245,6 +327,20 @@ class BabyNameSwiper {
         }
         
         return card;
+    }
+    
+    updateGenderIcons() {
+        if (!this.currentTheme) return;
+        
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+        choiceButtons.forEach(btn => {
+            const filter = btn.dataset.filter;
+            if (filter === 'boy') {
+                btn.innerHTML = `${this.currentTheme.icons.boy} Boy Names`;
+            } else if (filter === 'girl') {
+                btn.innerHTML = `${this.currentTheme.icons.girl} Girl Names`;
+            }
+        });
     }
     
     addSwipeListeners(card) {
