@@ -6,6 +6,8 @@ class BabyNameSwiper {
         this.likedNames = [];
         this.currentNames = [];
         this.currentIndex = 0;
+        this.currentView = 'splash';
+        this.isReviewing = false;
         
         this.cardStack = document.getElementById('cardStack');
         this.likedCount = document.getElementById('likedCount');
@@ -18,30 +20,27 @@ class BabyNameSwiper {
         this.currentX = 0;
         this.currentY = 0;
         
+        this.splashTapCount = 0;
+        this.splashTapTimer = null;
+        
         this.init();
     }
     
     init() {
         this.setupEventListeners();
-        this.filterNames(this.currentFilter);
-        this.shuffleNames();
-        this.renderCards();
-        this.updateStats();
+        this.showSplash();
     }
     
     setupEventListeners() {
-        // Filter buttons
-        document.querySelectorAll('.filter-btn').forEach(btn => {
+        // Splash screen double-tap
+        const splashView = document.getElementById('splashView');
+        splashView.addEventListener('click', () => this.handleSplashTap());
+        
+        // Welcome screen choice buttons
+        document.querySelectorAll('.choice-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
                 this.currentFilter = e.target.dataset.filter;
-                this.filterNames(this.currentFilter);
-                this.shuffleNames();
-                this.currentIndex = 0;
-                this.renderCards();
-                this.updateStats();
-                this.hideEmptyState();
+                this.startSwipe();
             });
         });
         
@@ -54,16 +53,144 @@ class BabyNameSwiper {
             this.swipeCard('right');
         });
         
-        // Reset button
-        document.getElementById('resetBtn').addEventListener('click', () => {
-            this.likedNames = [];
-            this.currentIndex = 0;
-            this.filterNames(this.currentFilter);
-            this.shuffleNames();
-            this.renderCards();
-            this.updateStats();
-            this.hideEmptyState();
+        // Done button
+        document.getElementById('doneBtn').addEventListener('click', () => {
+            this.showResults();
         });
+        
+        // Show results from empty state
+        document.getElementById('showResultsBtn').addEventListener('click', () => {
+            this.showResults();
+        });
+        
+        // Results view buttons
+        document.getElementById('reviewBtn').addEventListener('click', () => {
+            this.reviewNames();
+        });
+        
+        document.getElementById('emailBtn').addEventListener('click', () => {
+            this.shareEmail();
+        });
+        
+        document.getElementById('textBtn').addEventListener('click', () => {
+            this.shareText();
+        });
+    }
+    
+    showSplash() {
+        this.currentView = 'splash';
+        this.hideAllViews();
+        document.getElementById('splashView').style.display = 'block';
+        
+        // Auto-advance after 5 seconds
+        setTimeout(() => {
+            if (this.currentView === 'splash') {
+                this.showWelcome();
+            }
+        }, 5000);
+    }
+    
+    handleSplashTap() {
+        this.splashTapCount++;
+        
+        if (this.splashTapCount === 2) {
+            this.showWelcome();
+            return;
+        }
+        
+        // Reset tap count after 500ms
+        clearTimeout(this.splashTapTimer);
+        this.splashTapTimer = setTimeout(() => {
+            this.splashTapCount = 0;
+        }, 500);
+    }
+    
+    showWelcome() {
+        this.currentView = 'welcome';
+        this.hideAllViews();
+        document.getElementById('welcomeView').style.display = 'block';
+    }
+    
+    startSwipe() {
+        this.isReviewing = false;
+        this.filterNames(this.currentFilter);
+        this.shuffleNames();
+        this.currentIndex = 0;
+        this.showSwipe();
+    }
+    
+    showSwipe() {
+        this.currentView = 'swipe';
+        this.hideAllViews();
+        document.getElementById('swipeView').style.display = 'block';
+        this.renderCards();
+        this.updateStats();
+        this.hideEmptyState();
+    }
+    
+    showResults() {
+        this.currentView = 'results';
+        this.hideAllViews();
+        document.getElementById('resultsView').style.display = 'block';
+        this.renderResults();
+    }
+    
+    hideAllViews() {
+        document.querySelectorAll('.view').forEach(view => {
+            view.style.display = 'none';
+        });
+    }
+    
+    renderResults() {
+        const resultsList = document.getElementById('resultsList');
+        resultsList.innerHTML = '';
+        
+        if (this.likedNames.length === 0) {
+            return; // CSS ::before will show "No names selected" message
+        }
+        
+        this.likedNames.forEach(nameData => {
+            const nameItem = document.createElement('div');
+            nameItem.className = 'name-item';
+            nameItem.textContent = nameData.name;
+            resultsList.appendChild(nameItem);
+        });
+    }
+    
+    reviewNames() {
+        if (this.likedNames.length === 0) {
+            // No liked names, so restart with original filtered list
+            this.startSwipe();
+            return;
+        }
+        
+        this.isReviewing = true;
+        this.currentNames = [...this.likedNames];
+        this.currentIndex = 0;
+        this.showSwipe();
+    }
+    
+    shareEmail() {
+        if (this.likedNames.length === 0) {
+            alert('No names selected yet! Go back and swipe to pick some names first.');
+            return;
+        }
+        
+        const namesList = this.likedNames.map(n => n.name).join(', ');
+        const subject = encodeURIComponent('Baby Name Ideas');
+        const body = encodeURIComponent(`Check out these baby names I liked:\n\n${namesList}`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+    
+    shareText() {
+        if (this.likedNames.length === 0) {
+            alert('No names selected yet! Go back and swipe to pick some names first.');
+            return;
+        }
+        
+        const namesList = this.likedNames.map(n => n.name).join(', ');
+        const message = encodeURIComponent(`Check out these baby names I liked: ${namesList}`);
+        window.location.href = `sms:?body=${message}`;
     }
     
     filterNames(filter) {
@@ -235,7 +362,12 @@ class BabyNameSwiper {
             this.updateStats();
             
             if (this.currentIndex >= this.currentNames.length) {
-                this.showEmptyState();
+                if (this.isReviewing) {
+                    // After reviewing, go back to results
+                    this.showResults();
+                } else {
+                    this.showEmptyState();
+                }
             } else {
                 this.renderCards();
             }

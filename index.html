@@ -3,56 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Baby Name Swiper</title>
+    <title>Angie's Baby Namer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>👶 Baby Name Swiper</h1>
-            <p class="subtitle">Swipe right to like, left to pass</p>
-        </header>
-
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">Whatever</button>
-            <button class="filter-btn" data-filter="boy">Boy</button>
-            <button class="filter-btn" data-filter="girl">Girl</button>
-        </div>
-
-        <div class="stats">
-            <div class="stat">
-                <span class="stat-value" id="likedCount">0</span>
-                <span class="stat-label">Liked</span>
-            </div>
-            <div class="stat">
-                <span class="stat-value" id="remainingCount">0</span>
-                <span class="stat-label">Remaining</span>
+        <!-- View 1.1: Splash Screen -->
+        <div id="splashView" class="view">
+            <div class="splash-content">
+                <h1 class="splash-title">👶 Angie's<br>Baby Namer</h1>
+                <p class="splash-hint">Double-tap to start</p>
             </div>
         </div>
 
-        <div class="card-container">
-            <div class="swipe-indicator left">
-                <span>❌ PASS</span>
+        <!-- View 1.2: Welcome Screen -->
+        <div id="welcomeView" class="view" style="display: none;">
+            <div class="welcome-content">
+                <h1>👶 Welcome!</h1>
+                <p class="welcome-text">Swipe through baby names and save your favorites. Swipe right to like, left to pass. When you're done, you can review, email, or text your picks!</p>
+                <div class="gender-choice">
+                    <h2>Choose a category:</h2>
+                    <div class="choice-buttons">
+                        <button class="choice-btn" data-filter="boy">👦 Boy Names</button>
+                        <button class="choice-btn" data-filter="girl">👧 Girl Names</button>
+                        <button class="choice-btn" data-filter="all">✨ Whatever</button>
+                    </div>
+                </div>
             </div>
-            <div class="swipe-indicator right">
-                <span>❤️ LIKE</span>
-            </div>
-            <div id="cardStack"></div>
         </div>
 
-        <div class="action-buttons">
-            <button class="action-btn pass" id="passBtn">
-                <span>❌</span>
-            </button>
-            <button class="action-btn like" id="likeBtn">
-                <span>❤️</span>
-            </button>
+        <!-- View 2: Swipe View -->
+        <div id="swipeView" class="view" style="display: none;">
+            <header>
+                <h1>👶 Angie's Baby Namer</h1>
+                <p class="subtitle">Swipe right to like, left to pass</p>
+            </header>
+
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-value" id="likedCount">0</span>
+                    <span class="stat-label">Liked</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="remainingCount">0</span>
+                    <span class="stat-label">Remaining</span>
+                </div>
+            </div>
+
+            <div class="card-container">
+                <div class="swipe-indicator left">
+                    <span>❌ PASS</span>
+                </div>
+                <div class="swipe-indicator right">
+                    <span>❤️ LIKE</span>
+                </div>
+                <div id="cardStack"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn pass" id="passBtn">
+                    <span>❌</span>
+                </button>
+                <button class="action-btn like" id="likeBtn">
+                    <span>❤️</span>
+                </button>
+            </div>
+
+            <button class="done-btn" id="doneBtn">Done Choosing</button>
+
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <h2>🎉 All done!</h2>
+                <p>You've gone through all the names.</p>
+                <button class="reset-btn" id="showResultsBtn">See My Picks</button>
+            </div>
         </div>
 
-        <div class="empty-state" id="emptyState" style="display: none;">
-            <h2>🎉 All done!</h2>
-            <p>You've gone through all the names.</p>
-            <button class="reset-btn" id="resetBtn">Start Over</button>
+        <!-- View 3: Results View -->
+        <div id="resultsView" class="view" style="display: none;">
+            <div class="results-content">
+                <h1>❤️ Your Favorites</h1>
+                <div id="resultsList" class="results-list"></div>
+                <div class="results-actions">
+                    <button class="result-btn review" id="reviewBtn">🔄 Review Names</button>
+                    <button class="result-btn email" id="emailBtn">📧 Email</button>
+                    <button class="result-btn text" id="textBtn">💬 Text</button>
+                </div>
+            </div>
         </div>
     </div>
 
