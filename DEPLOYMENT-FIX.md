@@ -18,7 +18,7 @@ GitHub secrets cannot be added programmatically through the GitHub API without s
 3. Click **New repository secret**
 4. Enter the following details:
    - **Name**: `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`
-   - **Secret**: Use the token value from Issue #6
+   - **Secret**: Generate a new token from Azure Portal (see Security Note below)
 5. Click **Add secret**
 
 ### Option 2: Using GitHub CLI (If authenticated)
@@ -56,7 +56,7 @@ To confirm the secret is properly configured:
 
 ## Technical Details
 
-The GitHub Actions workflow at `.github/workflows/azure-static-web-apps-agreeable-field-0ababe210.yml` references this secret on line 39:
+The GitHub Actions workflow at `.github/workflows/azure-static-web-apps-agreeable-field-0ababe210.yml` references this secret:
 
 ```yaml
 azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210 }}

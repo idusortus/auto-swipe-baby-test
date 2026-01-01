@@ -75,8 +75,9 @@ This project is configured for deployment to **Azure Static Web Apps**.
    - Click "Review + create" → "Create"
 
 2. **Configure the API Token**:
-   - After deployment, Azure will automatically add the `AZURE_STATIC_WEB_APPS_API_TOKEN` secret to your GitHub repository
-   - The GitHub Actions workflow (`.github/workflows/azure-static-web-apps-deploy.yml`) will use this token automatically
+   - After deployment, Azure will automatically add deployment tokens to your GitHub repository
+   - For the specific workflow `azure-static-web-apps-agreeable-field-0ababe210.yml`, add the secret `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`
+   - See the Troubleshooting section below if deployments fail due to missing secrets
 
 3. **Automatic Deployment**:
    - Every push to the `main` branch will trigger an automatic deployment
@@ -88,7 +89,8 @@ This project is configured for deployment to **Azure Static Web Apps**.
    - You can also configure a custom domain in the Azure Portal
 
 ### Configuration Files
-- `.github/workflows/azure-static-web-apps-deploy.yml` - GitHub Actions workflow for CI/CD
+- `.github/workflows/azure-static-web-apps-agreeable-field-0ababe210.yml` - GitHub Actions workflow for CI/CD
+- `.github/workflows/azure-static-web-apps-deploy.yml` - Alternative workflow configuration
 - `staticwebapp.config.json` - Azure Static Web Apps configuration (routing, headers, etc.)
 
 ### Troubleshooting Deployment Issues
