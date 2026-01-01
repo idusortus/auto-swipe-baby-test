@@ -75,8 +75,9 @@ This project is configured for deployment to **Azure Static Web Apps**.
    - Click "Review + create" → "Create"
 
 2. **Configure the API Token**:
-   - After deployment, Azure will automatically add the `AZURE_STATIC_WEB_APPS_API_TOKEN` secret to your GitHub repository
-   - The GitHub Actions workflow (`.github/workflows/azure-static-web-apps-deploy.yml`) will use this token automatically
+   - After deployment, Azure will automatically add deployment tokens to your GitHub repository
+   - For the specific workflow `azure-static-web-apps-agreeable-field-0ababe210.yml`, add the secret `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`
+   - See the Troubleshooting section below if deployments fail due to missing secrets
 
 3. **Automatic Deployment**:
    - Every push to the `main` branch will trigger an automatic deployment
@@ -88,8 +89,37 @@ This project is configured for deployment to **Azure Static Web Apps**.
    - You can also configure a custom domain in the Azure Portal
 
 ### Configuration Files
-- `.github/workflows/azure-static-web-apps-deploy.yml` - GitHub Actions workflow for CI/CD
+- `.github/workflows/azure-static-web-apps-agreeable-field-0ababe210.yml` - Deployment workflow for the specific Azure Static Web App instance
+- `.github/workflows/azure-static-web-apps-deploy.yml` - Alternative workflow using standard secret name (AZURE_STATIC_WEB_APPS_API_TOKEN)
 - `staticwebapp.config.json` - Azure Static Web Apps configuration (routing, headers, etc.)
+
+**Note:** The instance-specific workflow uses the secret `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`, which corresponds to your Azure Static Web App deployment.
+
+### Troubleshooting Deployment Issues
+
+If you're experiencing deployment failures, verify that the Azure deployment token is configured as a GitHub secret:
+
+1. **Check if the secret exists:**
+   - Go to repository **Settings** → **Secrets and variables** → **Actions**
+   - Look for a secret named `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`
+
+2. **Add the secret if missing:**
+   - In repository **Settings** → **Secrets and variables** → **Actions**
+   - Click **New repository secret**
+   - Name: `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`
+   - Value: Copy the deployment token from Azure Portal → Your Static Web App → **Overview** page
+   - Click **Add secret**
+
+3. **Security Best Practice:**
+   - If your deployment token has been exposed (e.g., posted in an issue), regenerate it immediately
+   - Go to Azure Portal → Your Static Web App → **Overview** → **Reset deployment token**
+   - Update the GitHub secret with the new token value
+
+4. **Verify workflow configuration:**
+   - The workflow file should reference: `${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210 }}`
+   - Check `.github/workflows/azure-static-web-apps-agreeable-field-0ababe210.yml`
+
+Once the secret is configured, re-run the failed workflow or trigger a new deployment by pushing changes to the `main` branch.
 
 ## Browser Compatibility
 
