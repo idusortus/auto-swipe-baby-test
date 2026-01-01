@@ -67,6 +67,9 @@ body {
     padding: 40px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     text-align: center;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .theme-content h1 {
@@ -87,6 +90,9 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 15px;
     margin-top: 30px;
+    overflow-y: auto;
+    max-height: calc(90vh - 250px);
+    padding-right: 5px;
 }
 
 .theme-option {
@@ -221,7 +227,9 @@ body {
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    min-height: 400px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .results-content h1 {
@@ -232,10 +240,11 @@ body {
 }
 
 .results-list {
-    max-height: 400px;
+    flex: 1;
     overflow-y: auto;
     margin-bottom: 30px;
     padding: 0 10px;
+    min-height: 100px;
 }
 
 .results-list:empty::before {

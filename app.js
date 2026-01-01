@@ -246,6 +246,8 @@ class BabyNameSwiper {
         this.isReviewing = true;
         this.currentNames = [...this.likedNames];
         this.currentIndex = 0;
+        // Clear liked names when starting review to prevent duplicates and count accumulation
+        this.likedNames = [];
         this.showSwipe();
     }
     
@@ -451,7 +453,12 @@ class BabyNameSwiper {
             indicator.classList.remove('show');
             
             if (direction === 'right') {
-                this.likedNames.push(this.currentNames[this.currentIndex]);
+                // Prevent duplicates by checking if name already exists in likedNames
+                const currentName = this.currentNames[this.currentIndex];
+                const alreadyLiked = this.likedNames.some(n => n.name === currentName.name && n.gender === currentName.gender);
+                if (!alreadyLiked) {
+                    this.likedNames.push(currentName);
+                }
             }
             
             this.currentIndex++;
