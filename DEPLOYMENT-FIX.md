@@ -13,7 +13,7 @@ GitHub secrets cannot be added programmatically through the GitHub API without s
 
 ### Option 1: Using GitHub Web Interface (Recommended)
 
-1. Navigate to your repository: https://github.com/idusortus/auto-swipe-baby-test
+1. Navigate to your repository settings
 2. Click **Settings** → **Secrets and variables** → **Actions**
 3. Click **New repository secret**
 4. Enter the following details:
