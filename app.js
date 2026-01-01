@@ -451,7 +451,12 @@ class BabyNameSwiper {
             indicator.classList.remove('show');
             
             if (direction === 'right') {
-                this.likedNames.push(this.currentNames[this.currentIndex]);
+                // Prevent duplicates by checking if name already exists in likedNames
+                const currentName = this.currentNames[this.currentIndex];
+                const alreadyLiked = this.likedNames.some(n => n.name === currentName.name && n.gender === currentName.gender);
+                if (!alreadyLiked) {
+                    this.likedNames.push(currentName);
+                }
             }
             
             this.currentIndex++;
