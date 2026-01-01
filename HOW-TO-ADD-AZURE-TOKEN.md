@@ -49,6 +49,18 @@ AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210
 
 Do not use a different name. The workflow file specifically looks for this name.
 
+### Alternative Workflow File
+
+**Note**: This repository has two workflow files:
+1. **azure-static-web-apps-agreeable-field-0ababe210.yml** - Uses `AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_FIELD_0ABABE210`
+2. **azure-static-web-apps-deploy.yml** - Uses `AZURE_STATIC_WEB_APPS_API_TOKEN`
+
+If you're getting errors from the second workflow, you may also need to add:
+- **Name**: `AZURE_STATIC_WEB_APPS_API_TOKEN`
+- **Value**: Same Azure deployment token
+
+Typically, only one workflow is active. Check which one is failing in the Actions tab.
+
 ### Still Having Issues?
 
 Check that:
