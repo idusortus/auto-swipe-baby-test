@@ -71,12 +71,29 @@ class BabyNameSwiper {
             this.reviewNames();
         });
         
+        document.getElementById('compareBtn').addEventListener('click', () => {
+            this.showCompareInput();
+        });
+        
         document.getElementById('emailBtn').addEventListener('click', () => {
             this.shareEmail();
         });
         
         document.getElementById('textBtn').addEventListener('click', () => {
             this.shareText();
+        });
+        
+        // Compare view buttons
+        document.getElementById('revealCompareBtn').addEventListener('click', () => {
+            this.compareWithPartner();
+        });
+        
+        document.getElementById('cancelCompareBtn').addEventListener('click', () => {
+            this.showResults();
+        });
+        
+        document.getElementById('backToResultsBtn').addEventListener('click', () => {
+            this.showResults();
         });
     }
     
@@ -135,18 +152,33 @@ class BabyNameSwiper {
             `;
             
             themeOption.addEventListener('click', () => {
-                this.selectTheme(theme.id);
+                this.selectTheme(theme.id, themeOption);
             });
             
             themeGrid.appendChild(themeOption);
         });
     }
     
-    selectTheme(themeId) {
+    selectTheme(themeId, themeElement) {
+        // Remove selected class from all theme options
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        
+        // Add selected class to clicked option
+        if (themeElement) {
+            themeElement.classList.add('selected');
+        }
+        
+        // Set the theme and apply it immediately
         this.currentTheme = themes[themeId];
         this.allNames = [...this.currentTheme.names];
         this.applyTheme();
-        this.showWelcome();
+        
+        // Wait 1.5 seconds before advancing to show the theme change
+        setTimeout(() => {
+            this.showWelcome();
+        }, 1500);
     }
     
     applyTheme() {
@@ -493,6 +525,109 @@ class BabyNameSwiper {
     hideEmptyState() {
         this.cardStack.style.display = 'block';
         this.emptyState.style.display = 'none';
+    }
+    
+    showCompareInput() {
+        this.currentView = 'compareInput';
+        this.hideAllViews();
+        document.getElementById('compareInputView').style.display = 'block';
+        
+        // Clear previous input
+        document.getElementById('partnerListInput').value = '';
+    }
+    
+    compareWithPartner() {
+        const partnerInput = document.getElementById('partnerListInput').value;
+        
+        if (!partnerInput.trim()) {
+            alert('Please enter your partner\'s list of names!');
+            return;
+        }
+        
+        // Parse partner's list
+        const partnerNames = partnerInput
+            .split('\n')
+            .map(name => name.trim())
+            .filter(name => name.length > 0)
+            .map(name => name.toLowerCase());
+        
+        // Find matches (case-insensitive)
+        const myNames = this.likedNames.map(n => n.name.toLowerCase());
+        const matches = this.likedNames.filter(nameData => 
+            partnerNames.includes(nameData.name.toLowerCase())
+        );
+        
+        // Show comparison results with countdown
+        this.showCompareResults(matches);
+    }
+    
+    showCompareResults(matches) {
+        this.currentView = 'compareResults';
+        this.hideAllViews();
+        document.getElementById('compareResultsView').style.display = 'block';
+        
+        // Show countdown overlay
+        const countdownOverlay = document.getElementById('countdownOverlay');
+        const countdownNumber = document.getElementById('countdownNumber');
+        const finalResults = document.getElementById('compareFinalResults');
+        
+        countdownOverlay.style.display = 'flex';
+        finalResults.style.display = 'none';
+        
+        // Countdown animation
+        let count = 3;
+        countdownNumber.textContent = count;
+        
+        const countdownInterval = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countdownNumber.textContent = count;
+            } else if (count === 0) {
+                countdownNumber.textContent = '🎉';
+            } else {
+                clearInterval(countdownInterval);
+                // Hide countdown and show results
+                countdownOverlay.style.display = 'none';
+                finalResults.style.display = 'block';
+                this.renderCompareResults(matches);
+            }
+        }, 1000);
+    }
+    
+    renderCompareResults(matches) {
+        const matchCount = document.getElementById('matchCount');
+        const matchesList = document.getElementById('matchesList');
+        const noMatches = document.getElementById('noMatches');
+        
+        if (matches.length === 0) {
+            matchCount.style.display = 'none';
+            matchesList.style.display = 'none';
+            noMatches.style.display = 'block';
+        } else {
+            matchCount.style.display = 'block';
+            matchesList.style.display = 'block';
+            noMatches.style.display = 'none';
+            
+            matchCount.textContent = `${matches.length} ${matches.length === 1 ? 'match' : 'matches'}! 🎉`;
+            
+            matchesList.innerHTML = '';
+            matches.forEach((nameData, index) => {
+                const matchItem = document.createElement('div');
+                matchItem.className = 'match-item';
+                matchItem.innerHTML = `
+                    <span class="match-number">${index + 1}</span>
+                    <span class="match-name">${nameData.name}</span>
+                    <span class="match-gender ${nameData.gender}">${nameData.gender === 'boy' ? '👦' : '👧'}</span>
+                `;
+                matchesList.appendChild(matchItem);
+                
+                // Add animation delay for staggered appearance
+                setTimeout(() => {
+                    matchItem.style.opacity = '1';
+                    matchItem.style.transform = 'scale(1)';
+                }, index * 150);
+            });
+        }
     }
 }
 
