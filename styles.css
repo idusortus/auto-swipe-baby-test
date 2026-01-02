@@ -511,7 +511,7 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 1.8rem;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     pointer-events: auto;
 }
