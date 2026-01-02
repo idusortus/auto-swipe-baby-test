@@ -399,15 +399,15 @@ body {
 
 .swipe-indicator.left {
     left: 20px;
-    background: rgba(255, 0, 0, 0.2);
-    color: #ff0000;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
     border: 3px solid #ff0000;
 }
 
 .swipe-indicator.right {
     right: 20px;
-    background: rgba(0, 255, 0, 0.2);
-    color: #00ff00;
+    background: rgba(0, 255, 0, 0.8);
+    color: white;
     border: 3px solid #00ff00;
 }
 
