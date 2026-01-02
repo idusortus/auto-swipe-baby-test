@@ -8,6 +8,8 @@ Allow users to use a Tinder-like swipe interface to sort through possible baby n
 - 📱 **Mobile-Friendly** - Responsive design that works perfectly on phones and tablets
 - 🚻 **Gender Filters** - Filter by Boy, Girl, or Whatever (all names)
 - 📊 **Stats Tracking** - See how many names you've liked and how many remain
+- 🔗 **Share Links** - Generate encoded shareable links to compare lists with your partner
+- 🤝 **Partner Comparison** - Compare your picks with a partner's list and reveal matches
 - 🎨 **Beautiful UI** - Modern gradient design with smooth animations
 - 📦 **No Setup Required** - Pure HTML/CSS/JavaScript with no build tools
 
@@ -29,7 +31,9 @@ python3 -m http.server 8080
 - **Swipe Left** or click ❌ to pass on a name
 - Use the **filter buttons** at the top to show only Boy names, Girl names, or all names
 - Track your progress with the **Liked** and **Remaining** counters
-- Click **Start Over** when you've finished to reset and try again
+- Click **Done Choosing** when finished to see your favorites
+- **Share Link** - Generate an encoded URL to share with your partner (keeps names secret!)
+- **Compare Lists** - Paste your partner's link or enter names manually to find matches
 
 ## Dataset
 
@@ -39,13 +43,37 @@ Includes **110 popular baby names**:
 
 Names are randomly shuffled each time you filter or reset.
 
+## Sharing & Comparing Names
+
+The app now supports **shareable encoded links** to compare baby name choices with your partner while maintaining the suspense!
+
+### How It Works
+
+1. **Swipe and Like**: Choose your favorite names by swiping through the list
+2. **Generate Link**: Click the "🔗 Share Link" button to create an encoded URL
+3. **Share Securely**: The link contains your choices in encoded format (names stay hidden!)
+4. **Partner Opens**: Your partner opens the link and swipes through their own choices
+5. **Compare**: Click "Compare Lists" and paste the shared link
+6. **Reveal**: After a dramatic countdown, matching names are revealed! 🎉
+
+### Sharing Options
+
+- **🔗 Share Link**: Generate an encoded URL (recommended - keeps suspense!)
+- **📧 Email**: Send an email with your encoded link
+- **💬 Text**: Send an SMS with your encoded link
+- **Manual Entry**: Still available as a backup option
+
+The encoded links ensure **no spoilers** - names remain secret until both partners are ready to reveal matches!
+
 ## Technical Details
 
 - Pure vanilla JavaScript - no frameworks or libraries required
 - Touch and mouse event support for universal compatibility
 - Smooth animations using CSS transitions
 - Responsive design with mobile-first approach
-- No backend, database, or authentication (Proof of Concept)
+- Client-side Base64 encoding for shareable links (no backend needed)
+- URL parameter handling for automatic shared list detection
+- Native Web Share API support with clipboard fallback
 
 ## Deployment to Azure
 

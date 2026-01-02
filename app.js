@@ -9,6 +9,7 @@ class BabyNameSwiper {
         this.currentIndex = 0;
         this.currentView = 'splash';
         this.isReviewing = false;
+        this.receivedSharedList = null;
         
         this.cardStack = document.getElementById('cardStack');
         this.likedCount = document.getElementById('likedCount');
@@ -29,7 +30,42 @@ class BabyNameSwiper {
     
     init() {
         this.setupEventListeners();
+        this.checkForSharedList();
         this.showSplash();
+    }
+    
+    // Encode liked names to shareable format
+    encodeNames() {
+        const data = this.likedNames.map(n => ({ name: n.name, gender: n.gender }));
+        const jsonString = JSON.stringify(data);
+        return btoa(encodeURIComponent(jsonString));
+    }
+    
+    // Decode shared names from encoded format
+    decodeNames(encoded) {
+        try {
+            const jsonString = decodeURIComponent(atob(encoded));
+            return JSON.parse(jsonString);
+        } catch (e) {
+            console.error('Failed to decode names:', e);
+            return null;
+        }
+    }
+    
+    // Check if URL contains shared list
+    checkForSharedList() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedList = urlParams.get('list');
+        if (sharedList) {
+            this.receivedSharedList = this.decodeNames(sharedList);
+        }
+    }
+    
+    // Generate shareable URL
+    generateShareURL() {
+        const encoded = this.encodeNames();
+        const baseUrl = window.location.origin + window.location.pathname;
+        return `${baseUrl}?list=${encoded}`;
     }
     
     setupEventListeners() {
@@ -71,6 +107,10 @@ class BabyNameSwiper {
             this.reviewNames();
         });
         
+        document.getElementById('shareLinkBtn').addEventListener('click', () => {
+            this.shareLink();
+        });
+        
         document.getElementById('compareBtn').addEventListener('click', () => {
             this.showCompareInput();
         });
@@ -84,6 +124,10 @@ class BabyNameSwiper {
         });
         
         // Compare view buttons
+        document.getElementById('revealFromLinkBtn').addEventListener('click', () => {
+            this.compareWithLink();
+        });
+        
         document.getElementById('revealCompareBtn').addEventListener('click', () => {
             this.compareWithPartner();
         });
@@ -286,15 +330,55 @@ class BabyNameSwiper {
         this.showSwipe();
     }
     
+    shareLink() {
+        if (this.likedNames.length === 0) {
+            alert('No names selected yet! Go back and swipe to pick some names first.');
+            return;
+        }
+        
+        const shareURL = this.generateShareURL();
+        
+        // Try to use the native share API if available (mobile)
+        if (navigator.share) {
+            navigator.share({
+                title: 'My Baby Name Picks',
+                text: 'Compare our baby name choices!',
+                url: shareURL
+            }).catch(() => {
+                // If share fails, fall back to clipboard
+                this.copyToClipboard(shareURL);
+            });
+        } else {
+            // Fall back to clipboard copy
+            this.copyToClipboard(shareURL);
+        }
+    }
+    
+    copyToClipboard(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Link copied to clipboard! Share it with your partner.');
+            }).catch(() => {
+                this.showLinkInAlert(text);
+            });
+        } else {
+            this.showLinkInAlert(text);
+        }
+    }
+    
+    showLinkInAlert(link) {
+        prompt('Copy this link to share:', link);
+    }
+    
     shareEmail() {
         if (this.likedNames.length === 0) {
             alert('No names selected yet! Go back and swipe to pick some names first.');
             return;
         }
         
-        const namesList = this.likedNames.map(n => n.name).join(', ');
-        const subject = encodeURIComponent('Baby Name Ideas');
-        const body = encodeURIComponent(`Check out these baby names I liked:\n\n${namesList}`);
+        const shareURL = this.generateShareURL();
+        const subject = encodeURIComponent('Compare Our Baby Names!');
+        const body = encodeURIComponent(`Let's compare our baby name choices!\n\nClick this link to see my picks and compare them with yours:\n\n${shareURL}\n\n(Don't worry - you won't see my choices until we both reveal!)`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     }
     
@@ -304,8 +388,8 @@ class BabyNameSwiper {
             return;
         }
         
-        const namesList = this.likedNames.map(n => n.name).join(', ');
-        const message = encodeURIComponent(`Check out these baby names I liked: ${namesList}`);
+        const shareURL = this.generateShareURL();
+        const message = encodeURIComponent(`Let's compare our baby name choices! Click this link to see my picks: ${shareURL}`);
         window.location.href = `sms:?body=${message}`;
     }
     
@@ -534,6 +618,63 @@ class BabyNameSwiper {
         
         // Clear previous input
         document.getElementById('partnerListInput').value = '';
+        document.getElementById('partnerLinkInput').value = '';
+        
+        // If we received a shared list from URL, auto-populate and show option to compare
+        if (this.receivedSharedList) {
+            document.getElementById('partnerLinkInput').value = 'Received shared list from link!';
+            document.getElementById('revealFromLinkBtn').textContent = '🎉 Compare Now!';
+        }
+    }
+    
+    compareWithLink() {
+        let partnerNames;
+        
+        // Check if we have a shared list from URL
+        if (this.receivedSharedList) {
+            partnerNames = this.receivedSharedList;
+        } else {
+            // Parse the link input
+            const linkInput = document.getElementById('partnerLinkInput').value.trim();
+            
+            if (!linkInput) {
+                alert('Please paste your partner\'s share link!');
+                return;
+            }
+            
+            // Extract the encoded list from the URL
+            try {
+                const url = new URL(linkInput);
+                const listParam = url.searchParams.get('list');
+                
+                if (!listParam) {
+                    alert('Invalid link! Make sure you copied the complete share link.');
+                    return;
+                }
+                
+                partnerNames = this.decodeNames(listParam);
+                
+                if (!partnerNames) {
+                    alert('Could not decode the link. Please check that you copied it correctly.');
+                    return;
+                }
+            } catch (e) {
+                alert('Invalid link format! Please paste the complete share link.');
+                return;
+            }
+        }
+        
+        // Find matches
+        const myNamesLower = this.likedNames.map(n => n.name.toLowerCase());
+        const matches = this.likedNames.filter(nameData => 
+            partnerNames.some(pn => pn.name.toLowerCase() === nameData.name.toLowerCase())
+        );
+        
+        // Clear received shared list after use
+        this.receivedSharedList = null;
+        
+        // Show comparison results with countdown
+        this.showCompareResults(matches);
     }
     
     compareWithPartner() {

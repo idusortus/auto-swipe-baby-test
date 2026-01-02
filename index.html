@@ -106,6 +106,7 @@
                 <div id="resultsList" class="results-list"></div>
                 <div class="results-actions">
                     <button class="result-btn review" id="reviewBtn">🔄 Review Names</button>
+                    <button class="result-btn share" id="shareLinkBtn">🔗 Share Link</button>
                     <button class="result-btn compare" id="compareBtn">🤝 Compare Lists</button>
                     <button class="result-btn email" id="emailBtn">📧 Email</button>
                     <button class="result-btn text" id="textBtn">💬 Text</button>
@@ -117,10 +118,18 @@
         <div id="compareInputView" class="view" style="display: none;">
             <div class="compare-input-content">
                 <h1>🤝 Compare Lists</h1>
-                <p class="compare-text">Enter your partner's favorite names (one per line):</p>
+                <p class="compare-text">Ask your partner to share their link, then paste it here:</p>
+                <input type="text" id="partnerLinkInput" class="partner-link-input" placeholder="Paste your partner's share link here">
+                <button class="compare-btn reveal" id="revealFromLinkBtn">🎉 Compare with Link!</button>
+                
+                <div class="compare-divider">
+                    <span>or</span>
+                </div>
+                
+                <p class="compare-text-alt">Enter names manually (one per line):</p>
                 <textarea id="partnerListInput" class="partner-list-input" placeholder="Emma&#10;Olivia&#10;Liam&#10;Noah"></textarea>
                 <div class="compare-actions">
-                    <button class="compare-btn reveal" id="revealCompareBtn">🎉 Reveal Matches!</button>
+                    <button class="compare-btn reveal" id="revealCompareBtn">🎉 Compare Manually!</button>
                     <button class="compare-btn cancel" id="cancelCompareBtn">← Back</button>
                 </div>
             </div>

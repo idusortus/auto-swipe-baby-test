@@ -294,6 +294,11 @@ body {
     color: white;
 }
 
+.result-btn.share {
+    background: #20c997;
+    color: white;
+}
+
 .result-btn.email {
     background: #51cf66;
     color: white;
@@ -584,6 +589,51 @@ body {
     color: #666;
     line-height: 1.6;
     margin-bottom: 20px;
+}
+
+.compare-text-alt {
+    font-size: 1rem;
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.partner-link-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    border: 2px solid var(--primary-color, #667eea);
+    border-radius: 10px;
+    font-family: inherit;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+.partner-link-input:focus {
+    border-color: var(--secondary-color, #764ba2);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.compare-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 30px 0;
+    color: #999;
+}
+
+.compare-divider::before,
+.compare-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.compare-divider span {
+    padding: 0 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .partner-list-input {
