@@ -111,8 +111,15 @@ body {
 }
 
 .theme-option.selected {
-    background: #667eea;
+    background: linear-gradient(135deg, var(--primary-color, #667eea), var(--secondary-color, #764ba2));
     color: white;
+    border-color: var(--primary-color, #667eea);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
+}
+
+.theme-option.selected .theme-desc {
+    opacity: 1;
 }
 
 .theme-option .theme-icon {
@@ -294,6 +301,16 @@ body {
 
 .result-btn.text {
     background: #ff6b6b;
+    color: white;
+}
+
+.result-btn.compare {
+    background: #ff6b9d;
+    color: white;
+}
+
+.result-btn.back {
+    background: var(--primary-color, #667eea);
     color: white;
 }
 
@@ -542,4 +559,219 @@ body {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* Compare Input View Styles */
+.compare-input-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.compare-input-content h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color, #667eea);
+    margin-bottom: 20px;
+}
+
+.compare-text {
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.partner-list-input {
+    width: 100%;
+    min-height: 200px;
+    padding: 15px;
+    font-size: 1.1rem;
+    border: 2px solid var(--primary-color, #667eea);
+    border-radius: 10px;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 30px;
+    outline: none;
+}
+
+.partner-list-input:focus {
+    border-color: var(--secondary-color, #764ba2);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.compare-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.compare-btn {
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.compare-btn.reveal {
+    background: linear-gradient(135deg, #ff6b9d, #ff1493);
+    color: white;
+}
+
+.compare-btn.cancel {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.compare-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Compare Results View Styles */
+.compare-results-content {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    min-height: 400px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.countdown-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--secondary-color, #764ba2) 100%);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.countdown-text {
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.countdown-number {
+    color: white;
+    font-size: 8rem;
+    font-weight: bold;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    animation: pulse-big 1s ease-in-out infinite;
+}
+
+@keyframes pulse-big {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+.compare-final-results {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.compare-final-results h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color, #667eea);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.matches-container {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 30px;
+}
+
+.match-count {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color, #667eea);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.matches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.match-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+.match-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color, #667eea);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.match-name {
+    flex: 1;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.match-gender {
+    font-size: 1.5rem;
+}
+
+.no-matches {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.no-matches p {
+    font-size: 1.5rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.no-matches-subtitle {
+    font-size: 1.1rem;
+    color: #999;
 }
