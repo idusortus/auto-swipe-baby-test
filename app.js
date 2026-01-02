@@ -75,6 +75,11 @@ class BabyNameSwiper {
         
         // Theme selection will be set up when rendering themes
         
+        // Continue from theme selection button
+        document.getElementById('continueFromThemeBtn').addEventListener('click', () => {
+            this.showWelcome();
+        });
+        
         // Welcome screen choice buttons
         document.querySelectorAll('.choice-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -219,10 +224,8 @@ class BabyNameSwiper {
         this.allNames = [...this.currentTheme.names];
         this.applyTheme();
         
-        // Wait 1.5 seconds before advancing to show the theme change
-        setTimeout(() => {
-            this.showWelcome();
-        }, 1500);
+        // Show the continue button
+        document.getElementById('continueFromThemeBtn').style.display = 'block';
     }
     
     applyTheme() {
