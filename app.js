@@ -266,9 +266,9 @@ class BabyNameSwiper {
         if (this.receivedSharedList) {
             const welcomeText = document.querySelector('.welcome-text');
             if (welcomeText) {
-                welcomeText.textContent = '🎉 Your partner shared their baby name picks! Now select your favorites and we\'ll compare them together.';
+                welcomeText.textContent = "🎉 Your partner shared their baby name picks! Now select your favorites and we'll compare them together.";
                 welcomeText.style.fontWeight = 'bold';
-                welcomeText.style.color = '#667eea';
+                welcomeText.style.color = this.currentTheme ? this.currentTheme.colors.primary : '#667eea';
             }
         }
     }
