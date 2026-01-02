@@ -29,8 +29,19 @@ class BabyNameSwiper {
         this.setupEventListeners();
         this.checkForSharedList();
         
-        // If a shared list was received, skip splash and go directly to welcome
+        // If a shared list was received, apply the partner's theme and skip directly to welcome with pre-selected gender
         if (this.receivedSharedList) {
+            // Apply the partner's theme
+            const themeId = this.receivedSharedList.theme || 'generic';
+            if (themes[themeId]) {
+                this.currentTheme = themes[themeId];
+                this.allNames = [...this.currentTheme.names];
+                this.applyTheme();
+            }
+            
+            // Pre-select the partner's gender filter
+            this.currentFilter = this.receivedSharedList.gender || 'all';
+            
             this.showWelcome();
         } else {
             this.showSplash();
@@ -39,7 +50,11 @@ class BabyNameSwiper {
     
     // Encode liked names to shareable format
     encodeNames() {
-        const data = this.likedNames.map(n => ({ name: n.name, gender: n.gender }));
+        const data = {
+            theme: this.currentTheme ? this.currentTheme.id : 'generic',
+            gender: this.currentFilter,
+            names: this.likedNames.map(n => ({ name: n.name, gender: n.gender }))
+        };
         const jsonString = JSON.stringify(data);
         return btoa(encodeURIComponent(jsonString));
     }
@@ -48,7 +63,19 @@ class BabyNameSwiper {
     decodeNames(encoded) {
         try {
             const jsonString = decodeURIComponent(atob(encoded));
-            return JSON.parse(jsonString);
+            const data = JSON.parse(jsonString);
+            
+            // Handle old format (array of names only) for backwards compatibility
+            if (Array.isArray(data)) {
+                return {
+                    theme: 'generic',
+                    gender: 'all',
+                    names: data
+                };
+            }
+            
+            // New format with theme and gender
+            return data;
         } catch (e) {
             console.error('Failed to decode names:', e);
             return null;
@@ -263,8 +290,15 @@ class BabyNameSwiper {
         if (this.receivedSharedList) {
             const welcomeText = document.querySelector('.welcome-text');
             if (welcomeText) {
-                welcomeText.textContent = "🎉 Your partner shared their baby name picks! Now select your favorites and we'll compare them together.";
-                welcomeText.style.fontWeight = 'bold';
+                const themeName = this.currentTheme ? this.currentTheme.name : '✨ Classic';
+                const genderText = this.currentFilter === 'boy' ? 'Boy Names' : 
+                                   this.currentFilter === 'girl' ? 'Girl Names' : 
+                                   'All Names';
+                welcomeText.innerHTML = `🎉 Your partner shared their baby name picks!<br><br>` +
+                                       `<strong>Theme:</strong> ${themeName}<br>` +
+                                       `<strong>Category:</strong> ${genderText}<br><br>` +
+                                       `Now swipe through and pick your favorites. We'll compare them together at the end!`;
+                welcomeText.style.fontWeight = 'normal';
                 welcomeText.style.color = this.currentTheme ? this.currentTheme.colors.primary : '#667eea';
             }
         }
@@ -654,11 +688,11 @@ class BabyNameSwiper {
     }
     
     compareWithLink() {
-        let partnerNames;
+        let partnerData;
         
         // Check if we have a shared list from URL
         if (this.receivedSharedList) {
-            partnerNames = this.receivedSharedList;
+            partnerData = this.receivedSharedList;
         } else {
             // Parse the link input
             const linkInput = document.getElementById('partnerLinkInput').value.trim();
@@ -678,9 +712,9 @@ class BabyNameSwiper {
                     return;
                 }
                 
-                partnerNames = this.decodeNames(listParam);
+                partnerData = this.decodeNames(listParam);
                 
-                if (!partnerNames) {
+                if (!partnerData) {
                     alert('Could not decode the link. Please check that you copied it correctly.');
                     return;
                 }
@@ -689,6 +723,9 @@ class BabyNameSwiper {
                 return;
             }
         }
+        
+        // Extract partner names from the data structure
+        const partnerNames = partnerData.names || partnerData;
         
         // Find matches
         const myNamesLower = this.likedNames.map(n => n.name.toLowerCase());
