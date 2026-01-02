@@ -528,19 +528,19 @@ class BabyNameSwiper {
         const rotation = this.currentX / 20;
         card.style.transform = `translate(${this.currentX}px, ${this.currentY}px) rotate(${rotation}deg)`;
         
-        // Show indicators
-        const leftIndicator = document.querySelector('.swipe-indicator.left');
-        const rightIndicator = document.querySelector('.swipe-indicator.right');
+        // Highlight action buttons based on swipe direction
+        const passBtn = document.getElementById('passBtn');
+        const likeBtn = document.getElementById('likeBtn');
         
         if (this.currentX < -50) {
-            leftIndicator.classList.add('show');
-            rightIndicator.classList.remove('show');
+            passBtn.classList.add('highlight');
+            likeBtn.classList.remove('highlight');
         } else if (this.currentX > 50) {
-            rightIndicator.classList.add('show');
-            leftIndicator.classList.remove('show');
+            likeBtn.classList.add('highlight');
+            passBtn.classList.remove('highlight');
         } else {
-            leftIndicator.classList.remove('show');
-            rightIndicator.classList.remove('show');
+            passBtn.classList.remove('highlight');
+            likeBtn.classList.remove('highlight');
         }
         
         if (e.type.includes('touch')) {
@@ -558,8 +558,11 @@ class BabyNameSwiper {
         const allCards = this.cardStack.querySelectorAll('.card:not(.top-card)');
         allCards.forEach(backCard => backCard.classList.remove('revealed'));
         
-        // Hide indicators
-        document.querySelectorAll('.swipe-indicator').forEach(ind => ind.classList.remove('show'));
+        // Remove highlight from action buttons
+        const passBtn = document.getElementById('passBtn');
+        const likeBtn = document.getElementById('likeBtn');
+        passBtn.classList.remove('highlight');
+        likeBtn.classList.remove('highlight');
         
         const threshold = 100;
         
@@ -590,12 +593,12 @@ class BabyNameSwiper {
         card.style.transition = 'transform 0.5s ease';
         card.style.transform = `translate(${moveX}px, -100px) rotate(${rotation}deg)`;
         
-        // Show indicator briefly
-        const indicator = document.querySelector(`.swipe-indicator.${direction}`);
-        indicator.classList.add('show');
+        // Highlight the corresponding button briefly
+        const btn = direction === 'right' ? document.getElementById('likeBtn') : document.getElementById('passBtn');
+        btn.classList.add('highlight');
         
         setTimeout(() => {
-            indicator.classList.remove('show');
+            btn.classList.remove('highlight');
             
             if (direction === 'right') {
                 // Prevent duplicates by checking if name already exists in likedNames
