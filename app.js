@@ -25,9 +25,6 @@ class BabyNameSwiper {
         this.splashTapCount = 0;
         this.splashTapTimer = null;
         
-        // Card rendering constants
-        this.BACKGROUND_CARD_OPACITY = 0.15; // Low opacity to prevent text bleed-through
-        
         this.init();
     }
     
@@ -447,7 +444,6 @@ class BabyNameSwiper {
                 if (i > 0) {
                     card.style.transform = `scale(${1 - i * 0.05}) translateY(${i * -10}px)`;
                     card.style.zIndex = cardsToRender - i;
-                    card.style.opacity = this.BACKGROUND_CARD_OPACITY;
                 }
             }
         }
