@@ -31,12 +31,14 @@ class BabyNameSwiper {
         
         // If a shared list was received, apply the partner's theme and skip directly to welcome with pre-selected gender
         if (this.receivedSharedList) {
-            // Apply the partner's theme
+            // Apply the partner's theme (with fallback to generic if theme not found)
             const themeId = this.receivedSharedList.theme || 'generic';
-            if (themes[themeId]) {
+            if (typeof themes !== 'undefined' && themes[themeId]) {
                 this.currentTheme = themes[themeId];
                 this.allNames = [...this.currentTheme.names];
                 this.applyTheme();
+            } else {
+                console.warn('Theme not found or themes not loaded:', themeId);
             }
             
             // Pre-select the partner's gender filter
@@ -280,6 +282,19 @@ class BabyNameSwiper {
         }
     }
     
+    // Helper method to convert gender filter to display text
+    getGenderDisplayText(filter) {
+        switch (filter) {
+            case 'boy':
+                return 'Boy Names';
+            case 'girl':
+                return 'Girl Names';
+            case 'all':
+            default:
+                return 'All Names';
+        }
+    }
+    
     showWelcome() {
         this.currentView = 'welcome';
         this.hideAllViews();
@@ -291,9 +306,7 @@ class BabyNameSwiper {
             const welcomeText = document.querySelector('.welcome-text');
             if (welcomeText) {
                 const themeName = this.currentTheme ? this.currentTheme.name : '✨ Classic';
-                const genderText = this.currentFilter === 'boy' ? 'Boy Names' : 
-                                   this.currentFilter === 'girl' ? 'Girl Names' : 
-                                   'All Names';
+                const genderText = this.getGenderDisplayText(this.currentFilter);
                 welcomeText.innerHTML = `🎉 Your partner shared their baby name picks!<br><br>` +
                                        `<strong>Theme:</strong> ${themeName}<br>` +
                                        `<strong>Category:</strong> ${genderText}<br><br>` +
@@ -725,6 +738,8 @@ class BabyNameSwiper {
         }
         
         // Extract partner names from the data structure
+        // New format: { theme, gender, names: [...] }
+        // Old format (backwards compatibility): [...] array of names directly
         const partnerNames = partnerData.names || partnerData;
         
         // Find matches
