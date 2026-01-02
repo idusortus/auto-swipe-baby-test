@@ -22,9 +22,6 @@ class BabyNameSwiper {
         this.currentX = 0;
         this.currentY = 0;
         
-        this.splashTapCount = 0;
-        this.splashTapTimer = null;
-        
         this.init();
     }
     
@@ -155,28 +152,27 @@ class BabyNameSwiper {
     showSplash() {
         this.currentView = 'splash';
         this.hideAllViews();
-        document.getElementById('splashView').style.display = 'block';
+        const splashView = document.getElementById('splashView');
+        splashView.style.display = 'block';
+        splashView.style.opacity = '1';
+        splashView.style.transition = '';
         
-        // Auto-advance after 5 seconds
+        // Auto-advance after 4 seconds
         setTimeout(() => {
             if (this.currentView === 'splash') {
                 this.showThemeSelection();
             }
-        }, 5000);
+        }, 4000);
     }
     
     handleSplashTap() {
-        this.splashTapCount++;
+        // Single tap proceeds to theme selection with fade out
+        const splashView = document.getElementById('splashView');
+        splashView.style.transition = 'opacity 0.5s ease';
+        splashView.style.opacity = '0';
         
-        if (this.splashTapCount === 2) {
+        setTimeout(() => {
             this.showThemeSelection();
-            return;
-        }
-        
-        // Reset tap count after 500ms
-        clearTimeout(this.splashTapTimer);
-        this.splashTapTimer = setTimeout(() => {
-            this.splashTapCount = 0;
         }, 500);
     }
     
