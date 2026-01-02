@@ -452,6 +452,11 @@ body {
     pointer-events: none;
 }
 
+.card:not(.top-card) .name,
+.card:not(.top-card) .gender {
+    visibility: hidden;
+}
+
 .card .name {
     font-size: 3rem;
     font-weight: bold;
