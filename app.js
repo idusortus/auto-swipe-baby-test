@@ -358,7 +358,6 @@ class BabyNameSwiper {
         if (navigator.share) {
             navigator.share({
                 title: 'My Baby Name Picks',
-                text: 'Compare our baby name choices!',
                 url: shareURL
             }).catch(() => {
                 // If share fails, fall back to clipboard
