@@ -505,6 +505,10 @@ class BabyNameSwiper {
         this.isDragging = true;
         card.classList.add('dragging');
         
+        // Reveal backend cards when dragging starts
+        const allCards = this.cardStack.querySelectorAll('.card:not(.top-card)');
+        allCards.forEach(backCard => backCard.classList.add('revealed'));
+        
         const touch = e.type.includes('touch') ? e.touches[0] : e;
         this.startX = touch.clientX;
         this.startY = touch.clientY;
@@ -549,6 +553,10 @@ class BabyNameSwiper {
         
         this.isDragging = false;
         card.classList.remove('dragging');
+        
+        // Hide backend cards when dragging ends
+        const allCards = this.cardStack.querySelectorAll('.card:not(.top-card)');
+        allCards.forEach(backCard => backCard.classList.remove('revealed'));
         
         // Hide indicators
         document.querySelectorAll('.swipe-indicator').forEach(ind => ind.classList.remove('show'));
