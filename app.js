@@ -31,7 +31,13 @@ class BabyNameSwiper {
     init() {
         this.setupEventListeners();
         this.checkForSharedList();
-        this.showSplash();
+        
+        // If a shared list was received, skip splash and go directly to welcome
+        if (this.receivedSharedList) {
+            this.showWelcome();
+        } else {
+            this.showSplash();
+        }
     }
     
     // Encode liked names to shareable format
@@ -255,6 +261,16 @@ class BabyNameSwiper {
         this.hideAllViews();
         document.getElementById('welcomeView').style.display = 'block';
         this.updateGenderIcons();
+        
+        // Update welcome text if a shared list was received
+        if (this.receivedSharedList) {
+            const welcomeText = document.querySelector('.welcome-text');
+            if (welcomeText) {
+                welcomeText.textContent = '🎉 Your partner shared their baby name picks! Now select your favorites and we\'ll compare them together.';
+                welcomeText.style.fontWeight = 'bold';
+                welcomeText.style.color = '#667eea';
+            }
+        }
     }
     
     startSwipe() {
@@ -381,7 +397,7 @@ class BabyNameSwiper {
         
         const shareURL = this.generateShareURL();
         const subject = encodeURIComponent('Compare Our Baby Names!');
-        const body = encodeURIComponent(`Let's compare our baby name choices!\n\nClick this link to see my picks and compare them with yours:\n\n${shareURL}\n\n(Don't worry - you won't see my choices until we both reveal!)`);
+        const body = encodeURIComponent(`Let's compare our baby name choices!\n\n${shareURL}\n\n(Don't worry - you won't see my choices until we both reveal!)`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     }
     
@@ -392,7 +408,7 @@ class BabyNameSwiper {
         }
         
         const shareURL = this.generateShareURL();
-        const message = encodeURIComponent(`Let's compare our baby name choices! Click this link to see my picks: ${shareURL}`);
+        const message = encodeURIComponent(`Let's compare our baby name choices!\n\n${shareURL}`);
         window.location.href = `sms:?body=${message}`;
     }
     
