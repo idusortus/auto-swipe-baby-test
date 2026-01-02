@@ -171,6 +171,7 @@ class BabyNameSwiper {
         splashView.style.transition = 'opacity 0.5s ease';
         splashView.style.opacity = '0';
         
+        // Wait for fade transition to complete (matches 0.5s transition duration)
         setTimeout(() => {
             this.showThemeSelection();
         }, 500);
