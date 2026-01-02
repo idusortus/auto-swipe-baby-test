@@ -554,10 +554,6 @@ class BabyNameSwiper {
         this.isDragging = false;
         card.classList.remove('dragging');
         
-        // Hide backend cards when dragging ends
-        const allCards = this.cardStack.querySelectorAll('.card:not(.top-card)');
-        allCards.forEach(backCard => backCard.classList.remove('revealed'));
-        
         // Remove highlight from action buttons
         const passBtn = document.getElementById('passBtn');
         const likeBtn = document.getElementById('likeBtn');
@@ -567,12 +563,14 @@ class BabyNameSwiper {
         const threshold = 100;
         
         if (Math.abs(this.currentX) > threshold) {
-            // Swipe detected
+            // Swipe detected - keep backend cards revealed during animation
             const direction = this.currentX > 0 ? 'right' : 'left';
             this.animateSwipe(card, direction);
         } else {
-            // Return to center
+            // Return to center - hide backend cards
             card.style.transform = '';
+            const allCards = this.cardStack.querySelectorAll('.card:not(.top-card)');
+            allCards.forEach(backCard => backCard.classList.remove('revealed'));
         }
         
         this.currentX = 0;
