@@ -444,6 +444,9 @@ class BabyNameSwiper {
                 if (i > 0) {
                     card.style.transform = `scale(${1 - i * 0.05}) translateY(${i * -10}px)`;
                     card.style.zIndex = cardsToRender - i;
+                } else {
+                    // Top card needs highest z-index to ensure it's always on top
+                    card.style.zIndex = cardsToRender;
                 }
             }
         }
