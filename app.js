@@ -444,7 +444,7 @@ class BabyNameSwiper {
                 if (i > 0) {
                     card.style.transform = `scale(${1 - i * 0.05}) translateY(${i * -10}px)`;
                     card.style.zIndex = cardsToRender - i;
-                    card.style.opacity = 1 - i * 0.2;
+                    card.style.opacity = 0.15; // Very low opacity to prevent name text showing through
                 }
             }
         }
