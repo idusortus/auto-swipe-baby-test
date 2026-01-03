@@ -733,7 +733,7 @@ body {
     padding: 40px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     min-height: 400px;
-    max-height: 90vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
 }
@@ -797,6 +797,8 @@ body {
     flex: 1;
     overflow-y: auto;
     margin-bottom: 30px;
+    padding-right: 5px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .match-count {
