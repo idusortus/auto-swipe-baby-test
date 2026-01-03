@@ -177,6 +177,12 @@ class BabyNameSwiper {
         document.getElementById('backToResultsBtn').addEventListener('click', () => {
             this.showResults();
         });
+        
+        // Partner link input - remove placeholder on focus
+        const partnerLinkInput = document.getElementById('partnerLinkInput');
+        partnerLinkInput.addEventListener('focus', () => {
+            partnerLinkInput.removeAttribute('placeholder');
+        });
     }
     
     showSplash() {

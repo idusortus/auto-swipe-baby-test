@@ -799,6 +799,7 @@ body {
     margin-bottom: 30px;
     padding-right: 5px;
     -webkit-overflow-scrolling: touch;
+    min-height: 0;
 }
 
 .match-count {
