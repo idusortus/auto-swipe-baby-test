@@ -178,10 +178,16 @@ class BabyNameSwiper {
             this.showResults();
         });
         
-        // Partner link input - remove placeholder on focus
+        // Partner link input - remove placeholder on focus, restore on blur if empty
         const partnerLinkInput = document.getElementById('partnerLinkInput');
+        const originalPlaceholder = partnerLinkInput.getAttribute('placeholder');
         partnerLinkInput.addEventListener('focus', () => {
             partnerLinkInput.removeAttribute('placeholder');
+        });
+        partnerLinkInput.addEventListener('blur', () => {
+            if (!partnerLinkInput.value.trim()) {
+                partnerLinkInput.setAttribute('placeholder', originalPlaceholder);
+            }
         });
     }
     
