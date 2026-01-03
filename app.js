@@ -814,7 +814,7 @@ class BabyNameSwiper {
                 clearInterval(countdownInterval);
                 // Hide countdown and show results
                 countdownOverlay.style.display = 'none';
-                finalResults.style.display = 'block';
+                finalResults.style.display = 'flex';
                 this.renderCompareResults(matches);
             }
         }, 1000);
