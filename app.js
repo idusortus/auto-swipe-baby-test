@@ -29,7 +29,7 @@ class BabyNameSwiper {
         this.setupEventListeners();
         this.checkForSharedList();
         
-        // If a shared list was received, apply the partner's theme and skip directly to welcome with pre-selected gender
+        // If a shared list was received, apply the partner's theme and skip directly to swipe view with pre-selected gender
         if (this.receivedSharedList) {
             // Apply the partner's theme (with fallback to generic if theme not found)
             const themeId = this.receivedSharedList.theme || 'generic';
@@ -44,7 +44,8 @@ class BabyNameSwiper {
             // Pre-select the partner's gender filter
             this.currentFilter = this.receivedSharedList.gender || 'all';
             
-            this.showWelcome();
+            // Skip welcome screen and go directly to swipe view
+            this.startSwipe();
         } else {
             this.showSplash();
         }
