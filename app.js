@@ -477,7 +477,7 @@ class BabyNameSwiper {
     
     shareMatches() {
         if (this.currentMatches.length === 0) {
-            alert('No matches to share! You need to have matching names with your partner first.');
+            alert('No matches found to share.');
             return;
         }
         
@@ -518,7 +518,15 @@ class BabyNameSwiper {
         if (choice === '1') {
             // Copy to clipboard
             const fullText = `${subject}\n\n${body}`;
-            this.copyToClipboard(fullText);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullText).then(() => {
+                    alert('Matches copied to clipboard!');
+                }).catch(() => {
+                    prompt('Copy this text to share your matches:', fullText);
+                });
+            } else {
+                prompt('Copy this text to share your matches:', fullText);
+            }
         } else if (choice === '2') {
             // Share via email
             const emailSubject = encodeURIComponent(subject);
