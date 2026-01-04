@@ -135,7 +135,12 @@ class BabyNameSwiper {
         
         // Done button
         document.getElementById('doneBtn').addEventListener('click', () => {
-            this.showResults();
+            // If user started with a shared link, auto-compare instead of showing results
+            if (this.startedWithSharedLink && this.receivedSharedList) {
+                this.autoCompareAfterCompletion();
+            } else {
+                this.showResults();
+            }
         });
         
         // Show results from empty state
