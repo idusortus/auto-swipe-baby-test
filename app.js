@@ -10,6 +10,7 @@ class BabyNameSwiper {
         this.currentView = 'splash';
         this.isReviewing = false;
         this.receivedSharedList = null;
+        this.startedWithSharedLink = false;
         
         this.cardStack = document.getElementById('cardStack');
         this.likedCount = document.getElementById('likedCount');
@@ -91,6 +92,7 @@ class BabyNameSwiper {
         const sharedList = urlParams.get('list');
         if (sharedList) {
             this.receivedSharedList = this.decodeNames(sharedList);
+            this.startedWithSharedLink = true;
         }
     }
     
@@ -673,6 +675,9 @@ class BabyNameSwiper {
                 if (this.isReviewing) {
                     // After reviewing, go back to results
                     this.showResults();
+                } else if (this.startedWithSharedLink && this.receivedSharedList) {
+                    // Auto-compare when completing after starting with a shared link
+                    this.autoCompareAfterCompletion();
                 } else {
                     this.showEmptyState();
                 }
@@ -690,6 +695,30 @@ class BabyNameSwiper {
     showEmptyState() {
         this.cardStack.style.display = 'none';
         this.emptyState.style.display = 'block';
+    }
+    
+    autoCompareAfterCompletion() {
+        // Hide the card container and show a splash message
+        this.cardStack.style.display = 'none';
+        this.emptyState.style.display = 'none';
+        
+        // Create a temporary splash overlay
+        const splashOverlay = document.createElement('div');
+        splashOverlay.className = 'completion-splash-overlay';
+        splashOverlay.innerHTML = `
+            <div class="completion-splash-content">
+                <h2>✨ Your choices are complete!</h2>
+                <p>Ready to compare with your partner?</p>
+                <div class="completion-spinner">🎉</div>
+            </div>
+        `;
+        document.querySelector('.container').appendChild(splashOverlay);
+        
+        // After 2 seconds, proceed to comparison
+        setTimeout(() => {
+            splashOverlay.remove();
+            this.compareWithLink();
+        }, 2000);
     }
     
     hideEmptyState() {
