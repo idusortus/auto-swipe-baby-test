@@ -11,6 +11,7 @@ class BabyNameSwiper {
         this.isReviewing = false;
         this.receivedSharedList = null;
         this.startedWithSharedLink = false;
+        this.currentMatches = [];
         
         this.cardStack = document.getElementById('cardStack');
         this.likedCount = document.getElementById('likedCount');
@@ -178,6 +179,10 @@ class BabyNameSwiper {
         
         document.getElementById('backToResultsBtn').addEventListener('click', () => {
             this.showResults();
+        });
+        
+        document.getElementById('shareMatchesBtn').addEventListener('click', () => {
+            this.shareMatches();
         });
         
         // Partner link input - remove placeholder on focus, restore on blur if empty
@@ -468,6 +473,70 @@ class BabyNameSwiper {
         const shareURL = this.generateShareURL();
         const message = encodeURIComponent(`Let's compare our baby name choices!\n\n${shareURL}`);
         window.location.href = `sms:?body=${message}`;
+    }
+    
+    shareMatches() {
+        if (this.currentMatches.length === 0) {
+            alert('No matches found to share.');
+            return;
+        }
+        
+        // Create a shareable message with the matched names
+        const matchCount = this.currentMatches.length;
+        const matchText = this.currentMatches.map(nameData => `• ${nameData.name} (${nameData.gender})`).join('\n');
+        const subject = `We have ${matchCount} matching baby ${matchCount === 1 ? 'name' : 'names'}! 🎉`;
+        const body = matchText;
+        
+        // Try to use the native share API if available (mobile)
+        if (navigator.share) {
+            navigator.share({
+                title: subject,
+                text: `${subject}\n\n${body}`
+            }).catch((error) => {
+                // If native share fails or is cancelled, fall back to other methods
+                if (error.name !== 'AbortError') {
+                    this.shareMatchesAlternative(subject, body);
+                }
+            });
+        } else {
+            // Desktop - show options
+            this.shareMatchesAlternative(subject, body);
+        }
+    }
+    
+    shareMatchesAlternative(subject, body) {
+        // Create a simple dialog with options
+        const options = [
+            '1 - Copy to Clipboard',
+            '2 - Share via Email',
+            '3 - Share via Text',
+            'Cancel'
+        ].join('\n');
+        
+        const choice = prompt(`How would you like to share your matches?\n\n${options}\n\nEnter your choice (1-3):`);
+        
+        if (choice === '1') {
+            // Copy to clipboard
+            const fullText = `${subject}\n\n${body}`;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullText).then(() => {
+                    alert('Matches copied to clipboard!');
+                }).catch(() => {
+                    prompt('Copy this text to share your matches:', fullText);
+                });
+            } else {
+                prompt('Copy this text to share your matches:', fullText);
+            }
+        } else if (choice === '2') {
+            // Share via email
+            const emailSubject = encodeURIComponent(subject);
+            const emailBody = encodeURIComponent(body);
+            window.location.href = `mailto:?subject=${emailSubject}&body=${emailBody}`;
+        } else if (choice === '3') {
+            // Share via text
+            const message = encodeURIComponent(`${subject}\n\n${body}`);
+            window.location.href = `sms:?body=${message}`;
+        }
     }
     
     filterNames(filter) {
@@ -823,6 +892,7 @@ class BabyNameSwiper {
     }
     
     showCompareResults(matches) {
+        this.currentMatches = matches; // Store matches for sharing
         this.currentView = 'compareResults';
         this.hideAllViews();
         document.getElementById('compareResultsView').style.display = 'block';
