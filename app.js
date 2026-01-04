@@ -485,13 +485,13 @@ class BabyNameSwiper {
         const matchCount = this.currentMatches.length;
         const matchText = this.currentMatches.map(nameData => `• ${nameData.name} (${nameData.gender})`).join('\n');
         const subject = `We have ${matchCount} matching baby ${matchCount === 1 ? 'name' : 'names'}! 🎉`;
-        const body = `${subject}\n\n${matchText}`;
+        const body = matchText;
         
         // Try to use the native share API if available (mobile)
         if (navigator.share) {
             navigator.share({
                 title: subject,
-                text: body
+                text: `${subject}\n\n${body}`
             }).catch((error) => {
                 // If native share fails or is cancelled, fall back to other methods
                 if (error.name !== 'AbortError') {
