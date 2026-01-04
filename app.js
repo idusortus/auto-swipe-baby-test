@@ -177,6 +177,18 @@ class BabyNameSwiper {
         document.getElementById('backToResultsBtn').addEventListener('click', () => {
             this.showResults();
         });
+        
+        // Partner link input - remove placeholder on focus, restore on blur if empty
+        const partnerLinkInput = document.getElementById('partnerLinkInput');
+        const originalPlaceholder = partnerLinkInput.getAttribute('placeholder');
+        partnerLinkInput.addEventListener('focus', () => {
+            partnerLinkInput.removeAttribute('placeholder');
+        });
+        partnerLinkInput.addEventListener('blur', () => {
+            if (!partnerLinkInput.value.trim()) {
+                partnerLinkInput.setAttribute('placeholder', originalPlaceholder);
+            }
+        });
     }
     
     showSplash() {
@@ -808,7 +820,7 @@ class BabyNameSwiper {
                 clearInterval(countdownInterval);
                 // Hide countdown and show results
                 countdownOverlay.style.display = 'none';
-                finalResults.style.display = 'block';
+                finalResults.style.display = 'flex';
                 this.renderCompareResults(matches);
             }
         }, 1000);
