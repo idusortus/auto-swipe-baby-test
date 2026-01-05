@@ -2,6 +2,13 @@
 
 Allow users to use a Tinder-like swipe interface to sort through possible baby names!
 
+## 📋 Documentation
+
+- **[CODE-REVIEW-SUMMARY.md](CODE-REVIEW-SUMMARY.md)** - Comprehensive code review with architecture analysis, UX improvements, and roadmap for database/API migration (1,300+ lines)
+- **[AI-AGENT-CONTEXT.md](AI-AGENT-CONTEXT.md)** - Technical implementation guide for developers
+- **[DEVELOPMENT-SUMMARY.md](DEVELOPMENT-SUMMARY.md)** - Project history and key decisions
+- **[DEPLOYMENT-FIX.md](DEPLOYMENT-FIX.md)** - Azure deployment troubleshooting
+
 ## Features
 
 - 🎴 **Swipe Interface** - Drag cards left to pass or right to like baby names
