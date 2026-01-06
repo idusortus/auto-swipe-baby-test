@@ -73,6 +73,10 @@
                 </div>
             </div>
 
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
             <div class="card-container">
                 <div class="swipe-indicator left">
                     <span>❌ PASS</span>
@@ -84,6 +88,9 @@
                 <div class="action-buttons">
                     <button class="action-btn pass" id="passBtn">
                         <span>❌</span>
+                    </button>
+                    <button class="action-btn undo" id="undoBtn">
+                        <span>↶</span>
                     </button>
                     <button class="action-btn like" id="likeBtn">
                         <span>❤️</span>
@@ -111,6 +118,7 @@
                     <button class="result-btn compare" id="compareBtn">🤝 Compare Lists</button>
                     <button class="result-btn email" id="emailBtn">📧 Email</button>
                     <button class="result-btn text" id="textBtn">💬 Text</button>
+                    <button class="result-btn clear-data" id="clearDataBtn">🗑️ Clear All Data</button>
                 </div>
             </div>
         </div>
@@ -159,6 +167,15 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal -->
+    <div class="modal-overlay" id="customModal" style="display: none;">
+        <div class="modal-content">
+            <h2 id="modalTitle">Modal Title</h2>
+            <p id="modalMessage">Modal message</p>
+            <button class="modal-close" id="modalCloseBtn">OK</button>
         </div>
     </div>
 

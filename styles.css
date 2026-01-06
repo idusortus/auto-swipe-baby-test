@@ -337,6 +337,11 @@ body {
     color: white;
 }
 
+.result-btn.clear-data {
+    background: #868e96;
+    color: white;
+}
+
 .result-btn.back {
     background: var(--primary-color, #667eea);
     color: white;
@@ -377,6 +382,25 @@ body {
 .stat-label {
     font-size: 0.9rem;
     opacity: 0.9;
+}
+
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+    backdrop-filter: blur(10px);
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.95));
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
 }
 
 .card-container {
@@ -500,7 +524,8 @@ body {
     left: 0;
     right: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 15px;
     padding: 0 20px;
     pointer-events: none;
     z-index: 10;
@@ -531,6 +556,11 @@ body {
 
 .action-btn.pass {
     background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+}
+
+.action-btn.undo {
+    background: linear-gradient(135deg, #ffd93d, #f9ca24);
+    color: #333;
 }
 
 .action-btn.like {
@@ -926,4 +956,84 @@ body {
     to {
         opacity: 1;
     }
+}
+
+/* Custom Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.info .modal-content {
+    border-top: 5px solid var(--primary-color, #667eea);
+}
+
+.modal-overlay.error .modal-content {
+    border-top: 5px solid #ff6b6b;
+}
+
+.modal-overlay.success .modal-content {
+    border-top: 5px solid #51cf66;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    font-size: 1.8rem;
+    color: var(--primary-color, #667eea);
+    margin-bottom: 20px;
+}
+
+.modal-content p {
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.modal-close {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: var(--primary-color, #667eea);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    background: var(--secondary-color, #764ba2);
 }
