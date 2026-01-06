@@ -12,6 +12,8 @@ class BabyNameSwiper {
         this.receivedSharedList = null;
         this.startedWithSharedLink = false;
         this.currentMatches = [];
+        this.swipeHistory = [];
+        this.maxHistorySize = 5;
         
         this.cardStack = document.getElementById('cardStack');
         this.likedCount = document.getElementById('likedCount');
@@ -51,6 +53,65 @@ class BabyNameSwiper {
         } else {
             this.showSplash();
         }
+    }
+    
+    // localStorage persistence methods
+    saveLikedNames() {
+        if (!this.currentTheme) return;
+        const key = `bougie-babies-liked-${this.currentTheme.id}-${this.currentFilter}`;
+        try {
+            localStorage.setItem(key, JSON.stringify(this.likedNames));
+        } catch (e) {
+            console.warn('Failed to save to localStorage:', e);
+        }
+    }
+    
+    loadLikedNames() {
+        if (!this.currentTheme) return;
+        const key = `bougie-babies-liked-${this.currentTheme.id}-${this.currentFilter}`;
+        try {
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                this.likedNames = JSON.parse(saved);
+            }
+        } catch (e) {
+            console.warn('Failed to load from localStorage:', e);
+            this.likedNames = [];
+        }
+    }
+    
+    clearAllData() {
+        // Clear all localStorage data
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('bougie-babies-liked-')) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+        
+        // Reset current liked names
+        this.likedNames = [];
+        this.renderResults();
+    }
+    
+    showModal(title, message, type = 'info') {
+        const modal = document.getElementById('customModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        
+        // Reset and apply type class
+        modal.className = 'modal-overlay ' + type;
+        modal.style.display = 'flex';
+    }
+    
+    closeModal() {
+        const modal = document.getElementById('customModal');
+        modal.style.display = 'none';
     }
     
     // Encode liked names to shareable format
@@ -133,6 +194,10 @@ class BabyNameSwiper {
             this.swipeCard('right');
         });
         
+        document.getElementById('undoBtn').addEventListener('click', () => {
+            this.undoLastSwipe();
+        });
+        
         // Done button
         document.getElementById('doneBtn').addEventListener('click', () => {
             // If user started with a shared link, auto-compare instead of showing results
@@ -169,6 +234,50 @@ class BabyNameSwiper {
             this.shareText();
         });
         
+        document.getElementById('clearDataBtn').addEventListener('click', () => {
+            // Create a temporary confirmation modal
+            const modal = document.getElementById('customModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const closeBtn = document.getElementById('modalCloseBtn');
+            
+            modalTitle.textContent = '⚠️ Clear All Data?';
+            modalMessage.textContent = 'Are you sure you want to clear all saved data? This cannot be undone.';
+            closeBtn.textContent = 'Cancel';
+            
+            modal.className = 'modal-overlay error';
+            modal.style.display = 'flex';
+            
+            // Create a confirm button
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'modal-close';
+            confirmBtn.textContent = 'Clear Data';
+            confirmBtn.style.background = '#ff6b6b';
+            confirmBtn.style.marginLeft = '10px';
+            
+            const modalContent = modal.querySelector('.modal-content');
+            modalContent.appendChild(confirmBtn);
+            
+            const handleConfirm = () => {
+                this.clearAllData();
+                this.closeModal();
+                this.showModal('✅ Success', 'All data cleared successfully!', 'success');
+                confirmBtn.remove();
+                closeBtn.textContent = 'OK';
+                confirmBtn.removeEventListener('click', handleConfirm);
+            };
+            
+            confirmBtn.addEventListener('click', handleConfirm);
+            
+            // Reset close button to remove confirm button
+            const handleCancel = () => {
+                confirmBtn.remove();
+                closeBtn.textContent = 'OK';
+                closeBtn.removeEventListener('click', handleCancel);
+            };
+            closeBtn.addEventListener('click', handleCancel);
+        });
+        
         // Compare view buttons
         document.getElementById('revealFromLinkBtn').addEventListener('click', () => {
             this.compareWithLink();
@@ -188,6 +297,18 @@ class BabyNameSwiper {
         
         document.getElementById('shareMatchesBtn').addEventListener('click', () => {
             this.shareMatches();
+        });
+        
+        // Modal close button
+        document.getElementById('modalCloseBtn').addEventListener('click', () => {
+            this.closeModal();
+        });
+        
+        // Modal backdrop click
+        document.getElementById('customModal').addEventListener('click', (e) => {
+            if (e.target.id === 'customModal') {
+                this.closeModal();
+            }
         });
         
         // Partner link input - remove placeholder on focus, restore on blur if empty
@@ -347,6 +468,7 @@ class BabyNameSwiper {
         this.filterNames(this.currentFilter);
         this.shuffleNames();
         this.currentIndex = 0;
+        this.loadLikedNames();
         this.showSwipe();
     }
     
@@ -420,7 +542,7 @@ class BabyNameSwiper {
     
     shareLink() {
         if (this.likedNames.length === 0) {
-            alert('No names selected yet! Go back and swipe to pick some names first.');
+            this.showModal('⚠️ No Names Selected', 'No names selected yet! Go back and swipe to pick some names first.', 'error');
             return;
         }
         
@@ -444,7 +566,7 @@ class BabyNameSwiper {
     copyToClipboard(text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('Link copied to clipboard! Share it with your partner.');
+                this.showModal('✅ Link Copied!', 'Link copied to clipboard! Share it with your partner.', 'success');
             }).catch(() => {
                 this.showLinkInAlert(text);
             });
@@ -459,7 +581,7 @@ class BabyNameSwiper {
     
     shareEmail() {
         if (this.likedNames.length === 0) {
-            alert('No names selected yet! Go back and swipe to pick some names first.');
+            this.showModal('⚠️ No Names Selected', 'No names selected yet! Go back and swipe to pick some names first.', 'error');
             return;
         }
         
@@ -471,7 +593,7 @@ class BabyNameSwiper {
     
     shareText() {
         if (this.likedNames.length === 0) {
-            alert('No names selected yet! Go back and swipe to pick some names first.');
+            this.showModal('⚠️ No Names Selected', 'No names selected yet! Go back and swipe to pick some names first.', 'error');
             return;
         }
         
@@ -482,7 +604,7 @@ class BabyNameSwiper {
     
     shareMatches() {
         if (this.currentMatches.length === 0) {
-            alert('No matches found to share.');
+            this.showModal('⚠️ No Matches', 'No matches found to share.', 'error');
             return;
         }
         
@@ -525,7 +647,7 @@ class BabyNameSwiper {
             const fullText = `${subject}\n\n${body}`;
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(fullText).then(() => {
-                    alert('Matches copied to clipboard!');
+                    this.showModal('✅ Copied!', 'Matches copied to clipboard!', 'success');
                 }).catch(() => {
                     prompt('Copy this text to share your matches:', fullText);
                 });
@@ -723,6 +845,18 @@ class BabyNameSwiper {
         const moveX = direction === 'right' ? 1000 : -1000;
         const rotation = direction === 'right' ? 50 : -50;
         
+        // Record swipe history before incrementing index
+        this.swipeHistory.push({
+            name: this.currentNames[this.currentIndex],
+            direction: direction,
+            index: this.currentIndex
+        });
+        
+        // Keep history size manageable
+        if (this.swipeHistory.length > this.maxHistorySize) {
+            this.swipeHistory.shift();
+        }
+        
         card.style.transition = 'transform 0.5s ease';
         card.style.transform = `translate(${moveX}px, -100px) rotate(${rotation}deg)`;
         
@@ -741,6 +875,9 @@ class BabyNameSwiper {
                     this.likedNames.push(currentName);
                 }
             }
+            
+            // Save to localStorage after each swipe
+            this.saveLikedNames();
             
             this.currentIndex++;
             this.updateStats();
@@ -761,9 +898,40 @@ class BabyNameSwiper {
         }, 500);
     }
     
+    undoLastSwipe() {
+        if (this.swipeHistory.length === 0) return;
+        
+        const lastSwipe = this.swipeHistory.pop();
+        this.currentIndex = lastSwipe.index;
+        
+        if (lastSwipe.direction === 'right') {
+            // Remove the last liked name (should match the undone swipe)
+            const indexToRemove = this.likedNames.findIndex(
+                n => n.name === lastSwipe.name.name && n.gender === lastSwipe.name.gender
+            );
+            if (indexToRemove !== -1) {
+                this.likedNames.splice(indexToRemove, 1);
+            }
+        }
+        
+        // Save to localStorage after undo
+        this.saveLikedNames();
+        
+        this.hideEmptyState();
+        this.renderCards();
+        this.updateStats();
+    }
+    
     updateStats() {
         this.likedCount.textContent = this.likedNames.length;
         this.remainingCount.textContent = Math.max(0, this.currentNames.length - this.currentIndex);
+        
+        // Update progress bar
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar && this.currentNames.length > 0) {
+            const progress = (this.currentIndex / this.currentNames.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
     }
     
     showEmptyState() {
@@ -827,7 +995,7 @@ class BabyNameSwiper {
             const linkInput = document.getElementById('partnerLinkInput').value.trim();
             
             if (!linkInput) {
-                alert('Please paste your partner\'s share link!');
+                this.showModal('⚠️ Missing Link', 'Please paste your partner\'s share link!', 'error');
                 return;
             }
             
@@ -837,18 +1005,18 @@ class BabyNameSwiper {
                 const listParam = url.searchParams.get('list');
                 
                 if (!listParam) {
-                    alert('Invalid link! Make sure you copied the complete share link.');
+                    this.showModal('⚠️ Invalid Link', 'Invalid link! Make sure you copied the complete share link.', 'error');
                     return;
                 }
                 
                 partnerData = this.decodeNames(listParam);
                 
                 if (!partnerData) {
-                    alert('Could not decode the link. Please check that you copied it correctly.');
+                    this.showModal('⚠️ Decode Error', 'Could not decode the link. Please check that you copied it correctly.', 'error');
                     return;
                 }
             } catch (e) {
-                alert('Invalid link format! Please paste the complete share link.');
+                this.showModal('⚠️ Invalid Format', 'Invalid link format! Please paste the complete share link.', 'error');
                 return;
             }
         }
@@ -875,7 +1043,7 @@ class BabyNameSwiper {
         const partnerInput = document.getElementById('partnerListInput').value;
         
         if (!partnerInput.trim()) {
-            alert('Please enter your partner\'s list of names!');
+            this.showModal('⚠️ Empty List', 'Please enter your partner\'s list of names!', 'error');
             return;
         }
         
