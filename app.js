@@ -265,16 +265,18 @@ class BabyNameSwiper {
                 confirmBtn.remove();
                 closeBtn.textContent = 'OK';
                 confirmBtn.removeEventListener('click', handleConfirm);
+                closeBtn.removeEventListener('click', handleCancel);
             };
-            
-            confirmBtn.addEventListener('click', handleConfirm);
             
             // Reset close button to remove confirm button
             const handleCancel = () => {
                 confirmBtn.remove();
                 closeBtn.textContent = 'OK';
-                closeBtn.removeEventListener('click', handleCancel);
+                confirmBtn.removeEventListener('click', handleCancel);
+                confirmBtn.removeEventListener('click', handleConfirm);
             };
+            
+            confirmBtn.addEventListener('click', handleConfirm);
             closeBtn.addEventListener('click', handleCancel);
         });
         
